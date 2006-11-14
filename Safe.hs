@@ -26,7 +26,7 @@ The others all follow the same pattern.
 
 This library also introduces three brand new functions:
 
-* 'at' - synonym for @(!!)@)
+* 'at' - synonym for @(!!)@
 
 * 'lookupJust' - defined as @lookupJust k = fromJust . lookup k@
 

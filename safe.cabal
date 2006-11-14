@@ -1,0 +1,9 @@
+Name:           Safe
+Version:        0.1
+License:        BSD3
+Author:         Neil Mitchell
+Homepage:       http://www-users.cs.york.ac.uk/~ndm/projects/libraries.php
+Build-Depends:  base
+Synopsis:       Library for safe (pattern match free) functions
+Exposed-modules:
+        Safe

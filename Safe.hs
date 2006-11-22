@@ -231,7 +231,7 @@ readNote msg s = case [x | (x,t) <- reads s, ("","") <- lex t] of
 -- |
 -- > lookupJust key = fromJust . lookup key
 lookupJust :: Eq a => a -> [(a,b)] -> b
-lookupJust key = fromJust . lookup key
+lookupJust key = fromJustNote "lookupJust, item not found" . lookup key
 
 lookupJustDef :: Eq a => b -> a -> [(a,b)] -> b
 lookupJustDef def key lst = fromMaybe def (lookup key lst)

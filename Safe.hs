@@ -54,6 +54,10 @@ module Safe(
 
 import Data.Maybe
 
+{-# PARTIAL tailNote, initNote, headNote, lastNote, minimumNote, maximumNote #-}
+{-# PARTIAL foldr1Note, foldl1Note, fromJustNote, assertNote, at, atNote, readNote #-}
+{-# PARTIAL lookupJustNote, lookupJust #-}
+
 
 liftDef :: (a -> b) -> (a -> Bool) -> b -> (a -> b)
 liftDef func test def val = if test val then def else func val

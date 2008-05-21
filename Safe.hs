@@ -1,7 +1,7 @@
 
 {- |
 Module      :  Safe
-Copyright   :  (c) Neil Mitchell 2006
+Copyright   :  (c) Neil Mitchell 2007-2008
 License     :  BSD3
 
 Maintainer  :  http://www.cs.york.ac.uk/~ndm/
@@ -9,7 +9,7 @@ Stability   :  in-progress
 Portability :  portable
 
 A library for safe functions, based on standard functions that may crash.
-For more details see <http://www.cs.york.ac.uk/~ndm/projects/libraries.php>
+For more details see <http://www-users.cs.york.ac.uk/~ndm/safe/>
 
 In general, each unsafe function has up to 4 forms.
 Since 'tail' has all the possible forms, it is fully documented.

@@ -1,10 +1,9 @@
-
 {- |
 Module      :  Safe
-Copyright   :  (c) Neil Mitchell 2007-2008
+Copyright   :  (c) Neil Mitchell 2007-2010
 License     :  BSD3
 
-Maintainer  :  http://community.haskell.org/~ndm/
+Maintainer  :  http://community.haskell.org/~ndm/safe
 Stability   :  in-progress
 Portability :  portable
 

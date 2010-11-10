@@ -7,7 +7,7 @@ Copyright:      2007-2010, Neil Mitchell
 Maintainer:     ndmitchell@gmail.com
 Author:         Neil Mitchell
 Homepage:       http://community.haskell.org/~ndm/safe/
-Build-Depends:  base
+Build-Depends:  base < 5
 Category:       Unclassified
 Synopsis:       Library for safe (pattern match free) functions
 Description:

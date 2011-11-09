@@ -1,21 +1,21 @@
-Name:           safe
-Build-Type:     Simple
-Version:        0.3
-License:        BSD3
-License-File:   LICENSE
-Copyright:      2007-2010, Neil Mitchell
-Maintainer:     ndmitchell@gmail.com
-Author:         Neil Mitchell
-Homepage:       http://community.haskell.org/~ndm/safe/
-Build-Depends:  base < 5
-Category:       Unclassified
-Synopsis:       Library for safe (pattern match free) functions
-Description:
+name:           safe
+build-type:     Simple
+version:        0.3
+license:        BSD3
+license-file:   LICENSE
+copyright:      2007-2010, Neil Mitchell
+maintainer:     ndmitchell@gmail.com
+author:         Neil Mitchell
+homepage:       http://community.haskell.org/~ndm/safe/
+build-depends:  base < 5
+category:       Unclassified
+synopsis:       Library for safe (pattern match free) functions
+description:
     Partial functions from the base library, such as @head@ and @!!@, modified
     to return more descriptive error messages, programmer defined error messages,
     @Maybe@ wrapped results and default values.
     
     These functions can be used to reduce the number of unsafe pattern matches in
     your code.
-Exposed-modules:
+exposed-modules:
     Safe

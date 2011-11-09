@@ -1,14 +1,14 @@
-name:           safe
+cabal-version:  >= 1.6
 build-type:     Simple
+name:           safe
 version:        0.3
 license:        BSD3
 license-file:   LICENSE
-copyright:      2007-2010, Neil Mitchell
-maintainer:     ndmitchell@gmail.com
-author:         Neil Mitchell
-homepage:       http://community.haskell.org/~ndm/safe/
-build-depends:  base < 5
 category:       Unclassified
+author:         Neil Mitchell <ndmitchell@gmail.com>
+maintainer:     Neil Mitchell <ndmitchell@gmail.com>
+copyright:      Neil Mitchell 2007-2011
+homepage:       http://community.haskell.org/~ndm/safe/
 synopsis:       Library for safe (pattern match free) functions
 description:
     Partial functions from the base library, such as @head@ and @!!@, modified
@@ -17,5 +17,16 @@ description:
     
     These functions can be used to reduce the number of unsafe pattern matches in
     your code.
-exposed-modules:
-    Safe
+
+
+source-repository head
+    type:     darcs
+    location: http://community.haskell.org/~ndm/darcs/safe/
+
+
+library
+    build-depends:
+        base < 5
+
+    exposed-modules:
+        Safe

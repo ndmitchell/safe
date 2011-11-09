@@ -47,10 +47,12 @@ module Safe(
     at, atDef, atMay, atNote,
     readDef, readMay, readNote,
     lookupJust, lookupJustDef, lookupJustNote,
+    findJust, findJustDef, findJustNote,
     abort
     ) where
 
 
+import Data.List
 import Data.Maybe
 
 
@@ -239,6 +241,21 @@ lookupJustNote :: Eq a => String -> a -> [(a,b)] -> b
 lookupJustNote msg key lst = case lookup key lst of
                                  Nothing -> error $ "Safe.lookupJust: element not found, " ++ msg
                                  Just x -> x
+
+
+
+-- |
+-- > findJust op = fromJust . find op
+findJust :: (a -> Bool) -> [a] -> a
+findJust op = fromJustNote "findJust, item not found" . find op
+
+findJustDef :: a -> (a -> Bool) -> [a] -> a
+findJustDef def op lst = fromMaybe def (find op lst)
+
+findJustNote :: String -> (a -> Bool) -> [a] -> a
+findJustNote msg op lst = case find op lst of
+                               Nothing -> error $ "Safe.findJust: element not found, " ++ msg
+                               Just x -> x
 
 
 

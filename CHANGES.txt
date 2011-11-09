@@ -1,4 +1,5 @@
 Changelog for Safe
 
+    Add findJust, safe wrapping of fromJust/find
 0.3
     Start of changelog

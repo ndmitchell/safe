@@ -2,7 +2,11 @@
 Equivalent versions to the "Safe" module, but generalised to work
 over any 'Foldable' type.
 -}
-module Safe.Foldable where
+module Safe.Foldable(
+    foldl1Note, foldl1Def, foldl1May, foldl1Safe,
+    foldr1Note, foldr1Def, foldr1May, foldr1Safe,
+    findJust, findJustDef, findJustNote, findJustSafe
+    ) where
 
 import Data.Foldable
 import Data.Monoid

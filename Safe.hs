@@ -42,6 +42,7 @@ module Safe(
     maximumDef, maximumMay, maximumNote,
     foldr1Def, foldr1May, foldr1Note,
     foldl1Def, foldl1May, foldl1Note,
+    foldl1Def', foldl1May', foldl1Note',
     fromJustDef, fromJustNote,
     assertNote,
     at, atDef, atMay, atNote,
@@ -171,6 +172,16 @@ foldl1May f = liftMay (foldl1 f) null
 
 foldl1Note :: String -> (a -> a -> a) -> [a] -> a
 foldl1Note note f = liftNote (foldl1 f) null "foldl1 []" note
+
+
+foldl1Def'  :: a -> (a -> a -> a) -> [a] -> a
+foldl1Def' def f = liftDef (foldl1' f) null def
+
+foldl1May'  :: (a -> a -> a) -> [a] -> Maybe a
+foldl1May' f = liftMay (foldl1' f) null
+
+foldl1Note' :: String -> (a -> a -> a) -> [a] -> a
+foldl1Note' note f = liftNote (foldl1' f) null "foldl1' []" note
 
 
 -- | See fromMaybe

@@ -18,11 +18,9 @@ description:
     These functions can be used to reduce the number of unsafe pattern matches in
     your code.
 
-
 source-repository head
-    type:     darcs
-    location: http://community.haskell.org/~ndm/darcs/safe/
-
+    type:     git
+    location: https://github.com/ndmitchell/safe.git
 
 library
     build-depends:

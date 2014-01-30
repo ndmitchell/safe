@@ -7,9 +7,10 @@ license-file:   LICENSE
 category:       Unclassified
 author:         Neil Mitchell <ndmitchell@gmail.com>
 maintainer:     Neil Mitchell <ndmitchell@gmail.com>
-copyright:      Neil Mitchell 2007-2013
+copyright:      Neil Mitchell 2007-2014
 homepage:       http://community.haskell.org/~ndm/safe/
 synopsis:       Library for safe (pattern match free) functions
+tested-with:    GHC==7.6.3, GHC==7.4.2, GHC==7.2.2
 description:
     Partial functions from the base library, such as @head@ and @!!@, modified
     to return more descriptive error messages, programmer defined error messages,
@@ -17,6 +18,8 @@ description:
     
     These functions can be used to reduce the number of unsafe pattern matches in
     your code.
+extra-source-files:
+    CHANGES.txt
 
 source-repository head
     type:     git

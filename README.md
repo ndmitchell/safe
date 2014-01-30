@@ -14,4 +14,5 @@ This library also introduces three brand new functions:
 
 * `at`, a synonym for `(!!)`
 * `lookupJust`, defined as `lookupJust k = fromJust . lookup k`
+* `findJust`, defined as `findJust f = fromJust . find f`
 * `abort`, same as `error`, but for a deliberate and intentional program abort

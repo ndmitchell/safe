@@ -229,7 +229,7 @@ readNote msg s = case [x | (x,t) <- reads s, ("","") <- lex t] of
                      []  -> error $ "Prelude.read: no parse, " ++ msg ++ ", on " ++ prefix
                      _   -> error $ "Prelude.read: ambiguous parse, " ++ msg ++ ", on " ++ prefix
     where
-        maxLength = 10
+        maxLength = 15
         prefix = '\"' : a ++ if length s <= maxLength then (b ++ "\"") else "...\""
             where (a,b) = splitAt (maxLength - 3) s
 

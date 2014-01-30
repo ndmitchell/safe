@@ -1,5 +1,6 @@
 Changelog for Safe
 
+0.3.4
     #1, improve the string clipping in readNote
 0.3.3
     #494, add foldl1' wrappings

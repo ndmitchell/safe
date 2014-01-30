@@ -1,14 +1,5 @@
 {- |
-Module      :  Safe
-Copyright   :  (c) Neil Mitchell 2007-2010
-License     :  BSD3
-
-Maintainer  :  http://community.haskell.org/~ndm/safe
-Stability   :  in-progress
-Portability :  portable
-
 A library for safe functions, based on standard functions that may crash.
-For more details see <http://community.haskell.org/~ndm/safe/>
 
 In general, each unsafe function has up to 4 forms.
 Since 'tail' has all the possible forms, it is fully documented.

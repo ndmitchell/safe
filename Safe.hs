@@ -42,6 +42,8 @@ module Safe(
     readDef, readMay, readNote,
     lookupJust, lookupJustDef, lookupJustNote,
     findJust, findJustDef, findJustNote,
+    takeMay,
+    dropMay,
     abort
     ) where
 
@@ -262,6 +264,33 @@ findJustNote msg op lst = case find op lst of
                                Nothing -> error $ "Safe.findJust: element not found, " ++ msg
                                Just x -> x
 
+
+-- |
+-- > takeMay n xs =
+-- >   | n <= length xs = Just (take n xs)
+-- >   | otherwise      = Nothing
+takeMay :: Int -> [a] -> Maybe [a]
+takeMay n []
+  | n /= 0    = Nothing
+  | otherwise = Just []
+takeMay n (x:xs)
+  | n < 0     = Nothing
+  | n == 0    = Just []
+  | otherwise = fmap (x:) $ takeMay (n - 1) xs
+
+
+-- |
+-- > dropMay n xs =
+-- >   | n <= length xs = Just (drop n xs)
+-- >   | otherwise      = Nothing
+dropMay :: Int -> [a] -> Maybe [a]
+dropMay n []
+  | n /= 0    = Nothing
+  | otherwise = Just []
+dropMay n (x:xs)
+  | n < 0     = Nothing
+  | n == 0    = Just xs
+  | otherwise = dropMay (n - 1) xs
 
 
 -- | Exactly the same as @error@. Use this for instances where the program

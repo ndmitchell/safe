@@ -14,7 +14,7 @@ The others all follow the same pattern.
 
 * @Safe@, returns a default type if possible, 'tailSafe'
 
-This library also introduces three brand new functions:
+This library also introduces some new functions:
 
 * 'at' - synonym for @(!!)@
 

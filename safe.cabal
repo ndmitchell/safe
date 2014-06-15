@@ -10,7 +10,8 @@ maintainer:     Neil Mitchell <ndmitchell@gmail.com>
 copyright:      Neil Mitchell 2007-2014
 homepage:       http://community.haskell.org/~ndm/safe/
 synopsis:       Library for safe (pattern match free) functions
-tested-with:    GHC==7.6.3, GHC==7.4.2, GHC==7.2.2
+bug-reports:    https://github.com/ndmitchell/safe/issues
+tested-with:    GHC==7.8.2, GHC==7.6.3, GHC==7.4.2, GHC==7.2.2
 description:
     Partial functions from the base library, such as @head@ and @!!@, modified
     to return more descriptive error messages, programmer defined error messages,

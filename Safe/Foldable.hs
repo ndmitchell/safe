@@ -28,7 +28,7 @@ import Prelude hiding
 ---------------------------------------------------------------------
 -- UTILITIES
 
-fromNote = fromNoteModule "Data.Foldable"
+fromNote = fromNoteModule "Safe.Foldable"
 
 isNull :: Foldable t => t a -> Bool
 isNull = null . toList
@@ -76,13 +76,13 @@ maximumByNote note = fromNote note "maximumByNote on empty" .^ maximumByMay
 -- |
 -- > findJust op = fromJust . find op
 findJust :: Foldable t => (a -> Bool) -> t a -> a
-findJust = fromNote "" "findJust, no matching values" .^ find
+findJust = fromNote "" "findJust, no matching value" .^ find
 
 findJustDef :: Foldable t => a -> (a -> Bool) -> t a -> a
 findJustDef def = fromMaybe def .^ find
 
 findJustNote :: Foldable t => String -> (a -> Bool) -> t a -> a
-findJustNote note = fromNote note "findJustNote, no matching values" .^ find
+findJustNote note = fromNote note "findJustNote, no matching value" .^ find
 
 
 ---------------------------------------------------------------------

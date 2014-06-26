@@ -30,22 +30,16 @@ isNull = null . toList
 ---------------------------------------------------------------------
 -- WRAPPERS
 
-foldl1May :: Foldable t => (a -> a -> a) -> t a -> Maybe a
+foldl1May, foldr1May :: Foldable t => (a -> a -> a) -> t a -> Maybe a
 foldl1May = liftMay isNull . foldl1
-
-foldl1Note :: Foldable t => String -> (a -> a -> a) -> t a -> a
-foldl1Note note = fromNote note "foldl1Note on empty" .^ foldl1May
-
-foldl1Def :: Foldable t => a -> (a -> a -> a) -> t a -> a
-foldl1Def def = fromMaybe def .^ foldl1May
-
-foldr1May :: Foldable t => (a -> a -> a) -> t a -> Maybe a
 foldr1May = liftMay isNull . foldr1
 
-foldr1Note :: Foldable t => String -> (a -> a -> a) -> t a -> a
+foldl1Note, foldr1Note :: Foldable t => String -> (a -> a -> a) -> t a -> a
+foldl1Note note = fromNote note "foldl1Note on empty" .^ foldl1May
 foldr1Note note = fromNote note "foldr1Note on empty" .^ foldr1May
 
-foldr1Def :: Foldable t => a -> (a -> a -> a) -> t a -> a
+foldl1Def, foldr1Def :: Foldable t => a -> (a -> a -> a) -> t a -> a
+foldl1Def def = fromMaybe def .^ foldl1May
 foldr1Def def = fromMaybe def .^ foldr1May
 
 -- |

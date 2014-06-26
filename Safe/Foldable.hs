@@ -12,56 +12,65 @@ module Safe.Foldable(
     foldl1Safe, foldr1Safe, findJustSafe
     ) where
 
+import Safe.Util
 import Data.Foldable
 import Data.Monoid
 import Data.Maybe
-import Prelude hiding (foldl, foldr)
+import Prelude hiding (foldl, foldl1, foldr, foldr1)
 
-mfl :: (a -> a -> a) -> Maybe a -> a -> Maybe a
-mfl _ Nothing x = Just x
-mfl fun (Just y) x = Just (fun y x)
+---------------------------------------------------------------------
+-- UTILITIES
 
-foldl1Note :: Foldable t => String -> (a -> a -> a) -> t a -> a
-foldl1Note msg fun fld = fromMaybe (error $ "Safe.Foldable.foldl1Note: empty list, " ++ msg) (foldl (mfl fun) Nothing fld)
+fromNote = fromNoteModule "Data.Foldable"
 
-foldl1Def :: Foldable t => a -> (a -> a -> a) -> t a -> a
-foldl1Def def fun fld = fromMaybe def (foldl (mfl fun) Nothing fld)
+isNull :: Foldable t => t a -> Bool
+isNull = null . toList
+
+
+---------------------------------------------------------------------
+-- WRAPPERS
 
 foldl1May :: Foldable t => (a -> a -> a) -> t a -> Maybe a
-foldl1May fun = foldl (mfl fun) Nothing
+foldl1May = liftMay isNull . foldl1
+
+foldl1Note :: Foldable t => String -> (a -> a -> a) -> t a -> a
+foldl1Note note = fromNote note "foldl1Note on empty" .^ foldl1May
+
+foldl1Def :: Foldable t => a -> (a -> a -> a) -> t a -> a
+foldl1Def def = fromMaybe def .^ foldl1May
+
+foldr1May :: Foldable t => (a -> a -> a) -> t a -> Maybe a
+foldr1May = liftMay isNull . foldr1
+
+foldr1Note :: Foldable t => String -> (a -> a -> a) -> t a -> a
+foldr1Note note = fromNote note "foldr1Note on empty" .^ foldr1May
+
+foldr1Def :: Foldable t => a -> (a -> a -> a) -> t a -> a
+foldr1Def def = fromMaybe def .^ foldr1May
+
+-- |
+-- > findJust op = fromJust . find op
+findJust :: Foldable t => (a -> Bool) -> t a -> a
+findJust = fromNote "" "findJust, no matching values" .^ find
+
+findJustDef :: Foldable t => a -> (a -> Bool) -> t a -> a
+findJustDef def = fromMaybe def .^ find
+
+findJustNote :: Foldable t => String -> (a -> Bool) -> t a -> a
+findJustNote note = fromNote note "findJustNote, no matching values" .^ find
+
+
+---------------------------------------------------------------------
+-- DEPRECATED
 
 {-# DEPRECATED foldl1Safe "Use @foldl f mempty@ instead." #-}
 foldl1Safe :: (Monoid m, Foldable t) => (m -> m -> m) -> t m -> m
 foldl1Safe fun = foldl fun mempty
 
-
-mfr :: (a -> a -> a) -> a -> Maybe a -> Maybe a
-mfr _ x Nothing = Just x
-mfr fun x (Just y) = Just (fun x y)
-
-foldr1Note :: Foldable t => String -> (a -> a -> a) -> t a -> a
-foldr1Note msg fun fld = fromMaybe (error $ "Safe.Foldable.foldr1Note: empty list, " ++ msg) (foldr (mfr fun) Nothing fld)
-
-foldr1Def :: Foldable t => a -> (a -> a -> a) -> t a -> a
-foldr1Def def fun fld = fromMaybe def (foldr (mfr fun) Nothing fld)
-
-foldr1May :: Foldable t => (a -> a -> a) -> t a -> Maybe a
-foldr1May fun = foldr (mfr fun) Nothing
-
 {-# DEPRECATED foldr1Safe "Use @foldr f mempty@ instead." #-}
 foldr1Safe :: (Monoid m, Foldable t) => (m -> m -> m) -> t m -> m
 foldr1Safe fun = foldr fun mempty
 
--- |
--- > findJust op = fromJust . find op
-findJust :: Foldable t => (a -> Bool) -> t a -> a
-findJust op fld = fromMaybe (error "Safe.Foldable.findJust, item not found") (find op fld)
-
-findJustDef :: Foldable t => a -> (a -> Bool) -> t a -> a
-findJustDef def op fld = fromMaybe def (find op fld)
-
-findJustNote :: Foldable t => String -> (a -> Bool) -> t a -> a
-findJustNote msg op fld = fromMaybe (error $ "Safe.Foldable.findJustNote: element not found, " ++ msg) (find op fld)
 
 {-# DEPRECATED findJustSafe "Use @findJustDef mempty@ instead." #-}
 findJustSafe :: (Monoid m, Foldable t) => (m -> Bool) -> t m -> m

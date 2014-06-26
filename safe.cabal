@@ -33,3 +33,6 @@ library
     exposed-modules:
         Safe
         Safe.Foldable
+
+    other-modules:
+        Safe.Util

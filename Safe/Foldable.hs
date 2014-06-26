@@ -5,9 +5,13 @@ module Safe.Foldable(
     -- * New functions
     findJust,
     -- * Safe wrappers
-    foldl1Note, foldl1Def, foldl1May,
-    foldr1Note, foldr1Def, foldr1May,
-    findJustNote, findJustDef,
+    foldl1May, foldl1Def, foldl1Note,
+    foldr1May, foldr1Def, foldr1Note,
+    findJustDef, findJustNote,
+    minimumMay, minimumDef, minimumNote,
+    maximumMay, maximumDef, maximumNote,
+    minimumByMay, minimumByDef, minimumByNote,
+    maximumByMay, maximumByDef, maximumByNote,
     -- * Deprecated
     foldl1Safe, foldr1Safe, findJustSafe
     ) where
@@ -16,7 +20,10 @@ import Safe.Util
 import Data.Foldable
 import Data.Monoid
 import Data.Maybe
-import Prelude hiding (foldl, foldl1, foldr, foldr1)
+import Prelude hiding
+    (foldl, foldl1, foldr, foldr1
+    ,minimum, minimumBy, maximum, maximumBy)
+
 
 ---------------------------------------------------------------------
 -- UTILITIES
@@ -41,6 +48,30 @@ foldr1Note note = fromNote note "foldr1Note on empty" .^ foldr1May
 foldl1Def, foldr1Def :: Foldable t => a -> (a -> a -> a) -> t a -> a
 foldl1Def def = fromMaybe def .^ foldl1May
 foldr1Def def = fromMaybe def .^ foldr1May
+
+minimumMay, maximumMay :: (Foldable t, Ord a) => t a -> Maybe a
+minimumMay = liftMay isNull minimum
+maximumMay = liftMay isNull maximum
+
+minimumDef, maximumDef :: (Foldable t, Ord a) => a -> t a -> a
+minimumDef def = fromMaybe def . minimumMay
+maximumDef def = fromMaybe def . maximumMay
+
+minimumNote, maximumNote :: (Foldable t, Ord a) => String -> t a -> a
+minimumNote note = fromNote note "minimumNote on empty" . minimumMay
+maximumNote note = fromNote note "maximumNote on empty" . maximumMay
+
+minimumByMay, maximumByMay :: (Foldable t, Ord a) => (a -> a -> Ordering) -> t a -> Maybe a
+minimumByMay = liftMay isNull . minimumBy
+maximumByMay = liftMay isNull . maximumBy
+
+minimumByDef, maximumByDef :: (Foldable t, Ord a) => a -> (a -> a -> Ordering) -> t a -> a
+minimumByDef def = fromMaybe def .^ minimumByMay
+maximumByDef def = fromMaybe def .^ maximumByMay
+
+minimumByNote, maximumByNote :: (Foldable t, Ord a) => String -> (a -> a -> Ordering) -> t a -> a
+minimumByNote note = fromNote note "minimumByNote on empty" .^ minimumByMay
+maximumByNote note = fromNote note "maximumByNote on empty" .^ maximumByMay
 
 -- |
 -- > findJust op = fromJust . find op

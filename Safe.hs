@@ -79,8 +79,8 @@ tailMay  :: [a] -> Maybe [a]
 tailMay  = liftMay  tail null
 
 -- |
--- > tail "help me" [] = error "Pattern match failure, tail [], help me"
--- > tail "help me" [1,3,4] = [3,4]
+-- > tailNote "help me" [] = error "Pattern match failure, tail [], help me"
+-- > tailNote "help me" [1,3,4] = [3,4]
 tailNote :: String -> [a] -> [a]
 tailNote = liftNote tail null "tail []"
 

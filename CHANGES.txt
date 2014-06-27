@@ -1,5 +1,6 @@
 Changelog for Safe
 
+    Add Safe minimumBy/maximumBy functions
     Add a module of Exact functions
     Add Foldable minimum functions
     Clean up the Foldable module, deprecate the Safe variants

@@ -24,6 +24,8 @@ module Safe(
     lastMay, lastDef, lastNote,
     minimumMay, minimumDef, minimumNote,
     maximumMay, maximumDef, maximumNote,
+    minimumByMay, minimumByDef, minimumByNote,
+    maximumByMay, maximumByDef, maximumByNote,
     foldr1May, foldr1Def, foldr1Note,
     foldl1May, foldl1Def, foldl1Note,
     foldl1May', foldl1Def', foldl1Note',
@@ -140,6 +142,18 @@ maximumDef def = fromMaybe def . maximumMay
 minimumNote, maximumNote :: Ord a => String -> [a] -> a
 minimumNote note = fromNote note "minumumNote []" . minimumMay
 maximumNote note = fromNote note "maximumNote []" . maximumMay
+
+minimumByMay, maximumByMay :: Ord a => (a -> a -> Ordering) -> [a] -> Maybe a
+minimumByMay = liftMay null . minimumBy
+maximumByMay = liftMay null . maximumBy
+
+minimumByDef, maximumByDef :: Ord a => a -> (a -> a -> Ordering) -> [a] -> a
+minimumByDef def = fromMaybe def .^ minimumByMay
+maximumByDef def = fromMaybe def .^ maximumByMay
+
+minimumByNote, maximumByNote :: Ord a => String -> (a -> a -> Ordering) -> [a] -> a
+minimumByNote note = fromNote note "minumumByNote []" .^ minimumByMay
+maximumByNote note = fromNote note "maximumByNote []" .^ maximumByMay
 
 
 foldr1May, foldl1May, foldl1May' :: (a -> a -> a) -> [a] -> Maybe a

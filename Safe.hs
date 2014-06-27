@@ -91,7 +91,7 @@ tailDef :: [a] -> [a] -> [a]
 tailDef def = fromMaybe def . tailMay
 
 -- |
--- > tailNote "help me" [] = error "Pattern match failure, tail [], help me"
+-- > tailNote "help me" [] = error "Safe.tailNote [], help me"
 -- > tailNote "help me" [1,3,4] = [3,4]
 tailNote :: String -> [a] -> [a]
 tailNote note = fromNote note "tailNote []" . tailMay

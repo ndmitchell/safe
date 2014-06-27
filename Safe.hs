@@ -16,7 +16,7 @@ This library also introduces some new functions, documented at the top of the mo
 
 module Safe(
     -- * New functions
-    at, lookupJust, findJust, abort,
+    abort, at, lookupJust, findJust, elemIndexJust, findIndexJust,
     -- * Safe wrappers
     tailMay, tailDef, tailNote, tailSafe,
     initMay, initDef, initNote, initSafe,
@@ -37,6 +37,8 @@ module Safe(
     readMay, readDef, readNote,
     lookupJustDef, lookupJustNote,
     findJustDef, findJustNote,
+    elemIndexJustDef, elemIndexJustNote,
+    findIndexJustDef, findIndexJustNote,
     ) where
 
 import Safe.Util
@@ -242,3 +244,25 @@ findJustDef def = fromMaybe def .^ find
 
 findJustNote :: String -> (a -> Bool) -> [a] -> a
 findJustNote note = fromNote note "findJustNote, no matching value" .^ find
+
+-- |
+-- > elemIndexJust op = fromJust . elemIndex op
+elemIndexJust :: Eq a => a -> [a] -> Int
+elemIndexJust = fromNote "" "elemIndexJust, no matching value" .^ elemIndex
+
+elemIndexJustDef :: Eq a => Int -> a -> [a] -> Int
+elemIndexJustDef def = fromMaybe def .^ elemIndex
+
+elemIndexJustNote :: Eq a => String -> a -> [a] -> Int
+elemIndexJustNote note = fromNote note "elemIndexJustNote, no matching value" .^ elemIndex
+
+-- |
+-- > findIndexJust op = fromJust . findIndex op
+findIndexJust :: (a -> Bool) -> [a] -> Int
+findIndexJust = fromNote "" "findIndexJust, no matching value" .^ findIndex
+
+findIndexJustDef :: Int -> (a -> Bool) -> [a] -> Int
+findIndexJustDef def = fromMaybe def .^ findIndex
+
+findIndexJustNote :: String -> (a -> Bool) -> [a] -> Int
+findIndexJustNote note = fromNote note "findIndexJustNote, no matching value" .^ findIndex

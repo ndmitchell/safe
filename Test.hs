@@ -12,7 +12,7 @@ import Control.Monad
 import Data.List
 import Data.Maybe
 import System.IO.Unsafe
-import Test.QuickCheck
+import Test.QuickCheck hiding ((===))
 
 
 ---------------------------------------------------------------------

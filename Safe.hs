@@ -29,6 +29,8 @@ module Safe(
     foldr1May, foldr1Def, foldr1Note,
     foldl1May, foldl1Def, foldl1Note,
     foldl1May', foldl1Def', foldl1Note',
+    scanl1May, scanl1Def, scanl1Note,
+    scanr1May, scanr1Def, scanr1Note,
     fromJustDef, fromJustNote,
     assertNote,
     atMay, atDef, atNote,
@@ -171,6 +173,17 @@ foldr1Note note = fromNote note "foldr1Note []" .^ foldr1May
 foldl1Note note = fromNote note "foldl1Note []" .^ foldl1May
 foldl1Note' note = fromNote note "foldl1Note []" .^ foldl1May'
 
+scanr1May, scanl1May :: (a -> a -> a) -> [a] -> Maybe [a]
+scanr1May = liftMay null . scanr1
+scanl1May = liftMay null . scanl1
+
+scanr1Def, scanl1Def :: [a] -> (a -> a -> a) -> [a] -> [a]
+scanr1Def def = fromMaybe def .^ scanr1May
+scanl1Def def = fromMaybe def .^ scanl1May
+
+scanr1Note, scanl1Note :: String -> (a -> a -> a) -> [a] -> [a]
+scanr1Note note = fromNote note "scanr1Note []" .^ scanr1May
+scanl1Note note = fromNote note "scanl1Note []" .^ scanl1May
 
 -- | An alternative name for 'fromMaybe', to fit the naming scheme of this package.
 --   Generally using 'fromMaybe' directly would be considered better style.

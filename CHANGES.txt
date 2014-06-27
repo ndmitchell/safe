@@ -1,5 +1,6 @@
 Changelog for Safe
 
+    Add Safe scan functions
     Add Safe minimumBy/maximumBy functions
     Add a module of Exact functions
     Add Foldable minimum functions

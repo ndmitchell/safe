@@ -18,10 +18,13 @@ errors later in the process - they do not check upfront.
 module Safe.Exact(
     -- * New functions
     takeExact, dropExact, splitAtExact,
+    zipExact, zipWithExact,
     -- * Safe wrappers
     takeExactMay, takeExactNote,
     dropExactMay, dropExactNote,
     splitAtExactMay, splitAtExactNote,
+    zipExactMay, zipExactNote,
+    zipWithExactMay, zipWithExactNote,
     ) where
 
 import Control.Arrow
@@ -48,8 +51,18 @@ splitAtExact_ err nil cons o xs
         f i [] = err $ "index too large, index=" ++ show o ++ ", length=" ++ show (o-i)
 
 
+{-# INLINE zipWithExact_ #-}
+zipWithExact_ :: (String -> r) -> r -> (a -> b -> r -> r) -> [a] -> [b] -> r
+zipWithExact_ err nil cons = f
+    where
+        f (x:xs) (y:ys) = cons x y $ f xs ys
+        f [] [] = nil
+        f [] _ = err "second list is longer than the first"
+        f _ [] = err "first list is longer than the second"
+
+
 ---------------------------------------------------------------------
--- WRAPPERS
+-- TAKE/DROP/SPLIT
 
 -- |
 -- > takeExact n xs =
@@ -92,3 +105,34 @@ splitAtExactNote note = splitAtExact_ (addNote note "splitAtExactNote")
 splitAtExactMay :: Int -> [a] -> Maybe ([a], [a])
 splitAtExactMay = splitAtExact_ (const Nothing)
     (\x -> Just ([], x)) (\a b -> fmap (first (a:)) b)
+
+
+---------------------------------------------------------------------
+-- ZIP
+
+-- |
+-- > zipExact xs ys =
+-- >   | length xs == length ys = zip xs ys
+-- >   | otherwise              = error "some message"
+zipExact :: [a] -> [b] -> [(a,b)]
+zipExact = zipWithExact_ (addNote "" "zipExact") []  (\a b xs -> (a,b) : xs)
+
+-- |
+-- > zipWithExact f xs ys =
+-- >   | length xs == length ys = zipWith f xs ys
+-- >   | otherwise              = error "some message"
+zipWithExact :: (a -> b -> c) -> [a] -> [b] -> [c]
+zipWithExact f = zipWithExact_ (addNote "" "zipWithExact") [] (\a b xs -> f a b : xs)
+
+
+zipExactNote :: String -> [a] -> [b] -> [(a,b)]
+zipExactNote note = zipWithExact_ (addNote note "zipExactNote") []  (\a b xs -> (a,b) : xs)
+
+zipExactMay :: [a] -> [b] -> Maybe [(a,b)]
+zipExactMay = zipWithExact_ (const Nothing) (Just [])  (\a b xs -> fmap ((a,b) :) xs)
+
+zipWithExactNote :: String -> (a -> b -> c) -> [a] -> [b] -> [c]
+zipWithExactNote note f = zipWithExact_ (addNote note "zipWithExactNote") []  (\a b xs -> f a b : xs)
+
+zipWithExactMay :: (a -> b -> c) -> [a] -> [b] -> Maybe [c]
+zipWithExactMay f = zipWithExact_ (const Nothing) (Just [])  (\a b xs -> fmap (f a b :) xs)

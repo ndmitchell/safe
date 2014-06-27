@@ -28,28 +28,10 @@ import Control.Arrow
 
 
 ---------------------------------------------------------------------
--- SPECIFICATIONS
+-- HELPERS
 
--- |
--- > takeExact n xs =
--- >   | n >= 0 && n <= length xs = take n xs
--- >   | otherwise                = error "some message"
-takeExact :: Int -> [a] -> [a]
-takeExact = takeExactNote ""
-
--- |
--- > dropExact n xs =
--- >   | n >= 0 && n <= length xs = drop n xs
--- >   | otherwise                = error "some message"
-dropExact :: Int -> [a] -> [a]
-dropExact = dropExactNote ""
-
--- |
--- > splitAtExact n xs =
--- >   | n >= 0 && n <= length xs = splitAt n xs
--- >   | otherwise                = error "some message"
-splitAtExact :: Int -> [a] -> ([a], [a])
-splitAtExact = splitAtExactNote ""
+addNote fun note msg = error $
+    "Safe.Exact." ++ fun ++ ", " ++ msg ++ (if null note then "" else ", " ++ note)
 
 
 ---------------------------------------------------------------------
@@ -69,23 +51,42 @@ splitAtExact_ err nil cons o xs
 ---------------------------------------------------------------------
 -- WRAPPERS
 
-addNote fun note msg = error $
-    "Safe.Exact." ++ fun ++ ", " ++ msg ++ (if null note then "" else ", " ++ note)
+-- |
+-- > takeExact n xs =
+-- >   | n >= 0 && n <= length xs = take n xs
+-- >   | otherwise                = error "some message"
+takeExact :: Int -> [a] -> [a]
+takeExact = splitAtExact_ (addNote "takeExact" "") (const []) (:)
+
+-- |
+-- > dropExact n xs =
+-- >   | n >= 0 && n <= length xs = drop n xs
+-- >   | otherwise                = error "some message"
+dropExact :: Int -> [a] -> [a]
+dropExact = splitAtExact_ (addNote "dropExact" "") id (flip const)
+
+-- |
+-- > splitAtExact n xs =
+-- >   | n >= 0 && n <= length xs = splitAt n xs
+-- >   | otherwise                = error "some message"
+splitAtExact :: Int -> [a] -> ([a], [a])
+splitAtExact = splitAtExact_ (addNote "splitAtExact" "")
+    (\x -> ([], x)) (\a b -> first (a:) b)
 
 takeExactNote :: String -> Int -> [a] -> [a]
-takeExactNote note = splitAtExact_ (addNote "takeExact" note) (const []) (:)
+takeExactNote note = splitAtExact_ (addNote "takeExactNote" note) (const []) (:)
 
 takeExactMay :: Int -> [a] -> Maybe [a]
 takeExactMay = splitAtExact_ (const Nothing) (const $ Just []) (\a -> fmap (a:))
 
 dropExactNote :: String -> Int -> [a] -> [a]
-dropExactNote note = splitAtExact_ (addNote "dropExact" note) id (flip const)
+dropExactNote note = splitAtExact_ (addNote "dropExactNote" note) id (flip const)
 
 dropExactMay :: Int -> [a] -> Maybe [a]
 dropExactMay = splitAtExact_ (const Nothing) Just (flip const)
 
 splitAtExactNote :: String -> Int -> [a] -> ([a], [a])
-splitAtExactNote note = splitAtExact_ (addNote "splitAtExact" note)
+splitAtExactNote note = splitAtExact_ (addNote "splitAtExactNote" note)
     (\x -> ([], x)) (\a b -> first (a:) b)
 
 splitAtExactMay :: Int -> [a] -> Maybe ([a], [a])

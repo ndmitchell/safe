@@ -10,6 +10,7 @@ import Control.DeepSeq
 import Control.Exception
 import Control.Monad
 import Data.List
+import Data.Maybe
 import System.IO.Unsafe
 import Test.QuickCheck
 
@@ -55,6 +56,26 @@ main = do
         f "take" takeExact takeExactMay takeExactNote t
         f "drop" dropExact dropExactMay dropExactNote d
         f "splitAt" splitAtExact splitAtExactMay splitAtExactNote (t, d)
+
+    take 2 (zipExact [1,2,3] [1,2]) === [(1,1),(2,2)]
+    zipExact [d1,2,3] [d1,2] `errs` ["Safe.Exact.zipExact","first list is longer than the second"]
+    zipExact [d1,2] [d1,2,3] `errs` ["Safe.Exact.zipExact","second list is longer than the first"]
+    zipExact dNil dNil === []
+
+    quickCheck $ \(List10 (xs :: [Int])) x -> do
+        let ys = maybeToList x ++ xs
+        let res = zip xs ys
+        let f name exact may note =
+                if isNothing x then do
+                    exact xs ys === res
+                    note "foo" xs ys === res
+                    may xs ys === Just res
+                else do
+                    exact xs ys `err` ("Safe.Exact." ++ name ++ "Exact")
+                    note "foo" xs ys `errs` ["Safe.Exact." ++ name ++ "ExactNote","foo"]
+                    may xs ys === Nothing
+        f "zip" zipExact zipExactMay zipExactNote
+        f "zipWith" (zipWithExact (,)) (zipWithExactMay (,)) (flip zipWithExactNote (,))
 
 
 ---------------------------------------------------------------------

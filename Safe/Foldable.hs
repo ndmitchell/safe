@@ -17,12 +17,9 @@ module Safe.Foldable(
     ) where
 
 import Safe.Util
-import Data.Foldable
+import Data.Foldable as F
 import Data.Monoid
 import Data.Maybe
-import Prelude hiding
-    (foldl, foldl1, foldr, foldr1
-    ,minimum, minimumBy, maximum, maximumBy)
 
 
 ---------------------------------------------------------------------
@@ -38,8 +35,8 @@ isNull = null . toList
 -- WRAPPERS
 
 foldl1May, foldr1May :: Foldable t => (a -> a -> a) -> t a -> Maybe a
-foldl1May = liftMay isNull . foldl1
-foldr1May = liftMay isNull . foldr1
+foldl1May = liftMay isNull . F.foldl1
+foldr1May = liftMay isNull . F.foldr1
 
 foldl1Note, foldr1Note :: Foldable t => String -> (a -> a -> a) -> t a -> a
 foldl1Note note = fromNote note "foldl1Note on empty" .^ foldl1May
@@ -50,8 +47,8 @@ foldl1Def def = fromMaybe def .^ foldl1May
 foldr1Def def = fromMaybe def .^ foldr1May
 
 minimumMay, maximumMay :: (Foldable t, Ord a) => t a -> Maybe a
-minimumMay = liftMay isNull minimum
-maximumMay = liftMay isNull maximum
+minimumMay = liftMay isNull F.minimum
+maximumMay = liftMay isNull F.maximum
 
 minimumDef, maximumDef :: (Foldable t, Ord a) => a -> t a -> a
 minimumDef def = fromMaybe def . minimumMay
@@ -62,8 +59,8 @@ minimumNote note = fromNote note "minimumNote on empty" . minimumMay
 maximumNote note = fromNote note "maximumNote on empty" . maximumMay
 
 minimumByMay, maximumByMay :: (Foldable t, Ord a) => (a -> a -> Ordering) -> t a -> Maybe a
-minimumByMay = liftMay isNull . minimumBy
-maximumByMay = liftMay isNull . maximumBy
+minimumByMay = liftMay isNull . F.minimumBy
+maximumByMay = liftMay isNull . F.maximumBy
 
 minimumByDef, maximumByDef :: (Foldable t, Ord a) => a -> (a -> a -> Ordering) -> t a -> a
 minimumByDef def = fromMaybe def .^ minimumByMay
@@ -76,13 +73,13 @@ maximumByNote note = fromNote note "maximumByNote on empty" .^ maximumByMay
 -- |
 -- > findJust op = fromJust . find op
 findJust :: Foldable t => (a -> Bool) -> t a -> a
-findJust = fromNote "" "findJust, no matching value" .^ find
+findJust = fromNote "" "findJust, no matching value" .^ F.find
 
 findJustDef :: Foldable t => a -> (a -> Bool) -> t a -> a
-findJustDef def = fromMaybe def .^ find
+findJustDef def = fromMaybe def .^ F.find
 
 findJustNote :: Foldable t => String -> (a -> Bool) -> t a -> a
-findJustNote note = fromNote note "findJustNote, no matching value" .^ find
+findJustNote note = fromNote note "findJustNote, no matching value" .^ F.find
 
 
 ---------------------------------------------------------------------
@@ -90,11 +87,11 @@ findJustNote note = fromNote note "findJustNote, no matching value" .^ find
 
 {-# DEPRECATED foldl1Safe "Use @foldl f mempty@ instead." #-}
 foldl1Safe :: (Monoid m, Foldable t) => (m -> m -> m) -> t m -> m
-foldl1Safe fun = foldl fun mempty
+foldl1Safe fun = F.foldl fun mempty
 
 {-# DEPRECATED foldr1Safe "Use @foldr f mempty@ instead." #-}
 foldr1Safe :: (Monoid m, Foldable t) => (m -> m -> m) -> t m -> m
-foldr1Safe fun = foldr fun mempty
+foldr1Safe fun = F.foldr fun mempty
 
 
 {-# DEPRECATED findJustSafe "Use @findJustDef mempty@ instead." #-}

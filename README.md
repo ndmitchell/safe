@@ -1,8 +1,6 @@
 # Safe [![Build Status](https://travis-ci.org/ndmitchell/safe.svg)](https://travis-ci.org/ndmitchell/safe)
 
-A library for increasing the safety of your code, by wrapping standard `Prelude`/`Data.List` functions that potentially crash. These functions can be used to reduce the number of unsafe pattern matches in a program.
-
-Each unsafe function has up to four additional forms. For example, with `tail`:
+A library wrapping `Prelude`/`Data.List` functions that can throw exceptions, such as `head` and `!!`. Each unsafe function has up to four variants, e.g. with `tail`:
 
 * <tt>tail :: [a] -> [a]</tt>, raises an error on `tail []`.
 * <tt>tailMay :: [a] -> <i>Maybe</i> [a]</tt>, turns errors into `Nothing`.
@@ -10,8 +8,8 @@ Each unsafe function has up to four additional forms. For example, with `tail`:
 * <tt>tailNote :: <i>String</i> -> [a] -> [a]</tt>, takes an extra argument which supplements the error message.
 * <tt>tailSafe :: [a] -> [a]</tt>, returns some sensible default if possible, `[]` in the case of `tail`.
 
-The package is divided into three modules:
+This package is divided into three modules:
 
 * `Safe` contains safe variants of `Prelude` and `Data.List` functions.
 * `Safe.Foldable` contains safe variants of `Foldable` functions.
-* `Safe.Exact` creates crashing versions of functions like `zip` (errors if the lists are not equal) and `take` (errors if there are not enough elements) then wraps them to provide the safe variants.
+* `Safe.Exact` creates crashing versions of functions like `zip` (errors if the lists are not equal) and `take` (errors if there are not enough elements), then wraps them to provide safe variants.

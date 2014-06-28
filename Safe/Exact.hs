@@ -1,6 +1,6 @@
 {- |
 Provides functions that raise errors in corner cases instead of returning \"best effort\"
-results, then provides wrappers like the "Safe" module. As some examples:
+results, then provides wrappers like the "Safe" module. For example:
 
 * @'takeExact' 3 [1,2]@ raises an error, in contrast to 'take' which would return
   just two elements.

@@ -1,17 +1,18 @@
 {- |
-A library for safe functions, based on standard "Prelude" and "Data.List" functions that may crash.
+A module wrapping @Prelude@/@Data.List@ functions that can throw exceptions, such as @head@ and @!!@.
+Each unsafe function has up to four variants, e.g. with @tail@:
 
-Each unsafe function has up to 4 suffixes:
+* @'tail' :: [a] -> [a]@, raises an error on @tail []@.
 
-* @Note@, takes an extra argument which supplements the error message, e.g. 'tailNote'.
+* @'tailMay' :: [a] -> /Maybe/ [a]@, turns errors into @Nothing@.
 
-* @Def@, take an extra argument to give when a crash would otherwise happen, e.g. 'tailDef'.
+* @'tailDef' :: /[a]/ -> [a] -> [a]@, takes a default to return on errors.
 
-* @May@, wraps the result in a Maybe, e.g. 'tailMay'.
+* @'tailNote' :: /String/ -> [a] -> [a]@, takes an extra argument which supplements the error message.
 
-* @Safe@, returns a default type if possible, e.g. 'tailSafe'.
+* @'tailSafe' :: [a] -> [a]@, returns some sensible default if possible, @[]@ in the case of @tail@.
 
-This library also introduces some new functions, documented at the top of the module.
+This module also introduces some new functions, documented at the top of the module.
 -}
 
 module Safe(
@@ -55,9 +56,9 @@ fromNoteEither = fromNoteEitherModule "Safe"
 ---------------------------------------------------------------------
 -- IMPLEMENTATIONS
 
--- | Exactly the same as @error@. Use this for instances where the program
+-- | Synonym for 'error'. Used for instances where the program
 --   has decided to exit because of invalid user input, or the user pressed
---   quit etc. This allows @error@ to be reserved for genuine coding mistakes.
+--   quit etc. This function allows 'error' to be reserved for programmer errors.
 abort :: String -> a
 abort = error
 
@@ -200,7 +201,7 @@ assertNote note True val = val
 assertNote note False val = fromNote note "assertNote False" Nothing
 
 
--- | Same as '!!', but includes more details in the error message.
+-- | Synonym for '!!', but includes more information in the error message.
 at :: [a] -> Int -> a
 at = fromNoteEither "" "at" .^ at_
 

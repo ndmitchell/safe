@@ -1,5 +1,5 @@
 {- |
-Versions of 'Foldable' functions, with wrappers like the "Safe" module.
+'Foldable' functions, with wrappers like the "Safe" module.
 -}
 module Safe.Foldable(
     -- * New functions

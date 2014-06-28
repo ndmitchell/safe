@@ -1,5 +1,6 @@
 Changelog for Safe
 
+0.3.5
     Add Safe elemIndexJust/findIndexJust functions
     Add Safe scan functions
     Add Safe minimumBy/maximumBy functions

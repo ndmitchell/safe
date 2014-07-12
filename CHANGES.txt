@@ -1,5 +1,6 @@
 Changelog for Safe
 
+    #6, remove unnecessary Ord constraints from maximumBy/minimumBy
 0.3.5
     Add Safe elemIndexJust/findIndexJust functions
     Add Safe scan functions

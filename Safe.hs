@@ -148,15 +148,15 @@ minimumNote, maximumNote :: Ord a => String -> [a] -> a
 minimumNote note = fromNote note "minumumNote []" . minimumMay
 maximumNote note = fromNote note "maximumNote []" . maximumMay
 
-minimumByMay, maximumByMay :: Ord a => (a -> a -> Ordering) -> [a] -> Maybe a
+minimumByMay, maximumByMay :: (a -> a -> Ordering) -> [a] -> Maybe a
 minimumByMay = liftMay null . minimumBy
 maximumByMay = liftMay null . maximumBy
 
-minimumByDef, maximumByDef :: Ord a => a -> (a -> a -> Ordering) -> [a] -> a
+minimumByDef, maximumByDef :: a -> (a -> a -> Ordering) -> [a] -> a
 minimumByDef def = fromMaybe def .^ minimumByMay
 maximumByDef def = fromMaybe def .^ maximumByMay
 
-minimumByNote, maximumByNote :: Ord a => String -> (a -> a -> Ordering) -> [a] -> a
+minimumByNote, maximumByNote :: String -> (a -> a -> Ordering) -> [a] -> a
 minimumByNote note = fromNote note "minumumByNote []" .^ minimumByMay
 maximumByNote note = fromNote note "maximumByNote []" .^ maximumByMay
 

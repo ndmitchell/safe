@@ -27,9 +27,9 @@ module Safe.Exact(
     zipWithExactMay, zipWithExactNote, zipWithExactDef,
     ) where
 
-import Data.Maybe ( fromMaybe )
 import Control.Arrow
-import Safe.Util ( (.^), (.^^) )
+import Data.Maybe
+import Safe.Util
 
 ---------------------------------------------------------------------
 -- HELPERS

@@ -20,15 +20,16 @@ module Safe.Exact(
     takeExact, dropExact, splitAtExact,
     zipExact, zipWithExact,
     -- * Safe wrappers
-    takeExactMay, takeExactNote,
-    dropExactMay, dropExactNote,
-    splitAtExactMay, splitAtExactNote,
-    zipExactMay, zipExactNote,
-    zipWithExactMay, zipWithExactNote,
+    takeExactMay, takeExactNote, takeExactDef,
+    dropExactMay, dropExactNote, dropExactDef,
+    splitAtExactMay, splitAtExactNote, splitAtExactDef,
+    zipExactMay, zipExactNote, zipExactDef,
+    zipWithExactMay, zipWithExactNote, zipWithExactDef,
     ) where
 
+import Data.Maybe ( fromMaybe )
 import Control.Arrow
-
+import Safe.Util ( (.^), (.^^) )
 
 ---------------------------------------------------------------------
 -- HELPERS
@@ -92,11 +93,17 @@ takeExactNote note = splitAtExact_ (addNote note "takeExactNote") (const []) (:)
 takeExactMay :: Int -> [a] -> Maybe [a]
 takeExactMay = splitAtExact_ (const Nothing) (const $ Just []) (\a -> fmap (a:))
 
+takeExactDef :: [a] -> Int -> [a] -> [a]
+takeExactDef def = fromMaybe def .^ takeExactMay
+
 dropExactNote :: String -> Int -> [a] -> [a]
 dropExactNote note = splitAtExact_ (addNote note "dropExactNote") id (flip const)
 
 dropExactMay :: Int -> [a] -> Maybe [a]
 dropExactMay = splitAtExact_ (const Nothing) Just (flip const)
+
+dropExactDef :: [a] -> Int -> [a] -> [a]
+dropExactDef def = fromMaybe def .^ dropExactMay
 
 splitAtExactNote :: String -> Int -> [a] -> ([a], [a])
 splitAtExactNote note = splitAtExact_ (addNote note "splitAtExactNote")
@@ -106,6 +113,8 @@ splitAtExactMay :: Int -> [a] -> Maybe ([a], [a])
 splitAtExactMay = splitAtExact_ (const Nothing)
     (\x -> Just ([], x)) (\a b -> fmap (first (a:)) b)
 
+splitAtExactDef :: ([a], [a]) -> Int -> [a] -> ([a], [a])
+splitAtExactDef def = fromMaybe def .^ splitAtExactMay
 
 ---------------------------------------------------------------------
 -- ZIP
@@ -131,8 +140,14 @@ zipExactNote note = zipWithExact_ (addNote note "zipExactNote") []  (\a b xs -> 
 zipExactMay :: [a] -> [b] -> Maybe [(a,b)]
 zipExactMay = zipWithExact_ (const Nothing) (Just [])  (\a b xs -> fmap ((a,b) :) xs)
 
+zipExactDef :: [(a,b)] -> [a] -> [b] -> [(a,b)]
+zipExactDef def = fromMaybe def .^ zipExactMay
+
 zipWithExactNote :: String -> (a -> b -> c) -> [a] -> [b] -> [c]
 zipWithExactNote note f = zipWithExact_ (addNote note "zipWithExactNote") []  (\a b xs -> f a b : xs)
 
 zipWithExactMay :: (a -> b -> c) -> [a] -> [b] -> Maybe [c]
 zipWithExactMay f = zipWithExact_ (const Nothing) (Just [])  (\a b xs -> fmap (f a b :) xs)
+
+zipWithExactDef :: [c] -> (a -> b -> c) -> [a] -> [b] -> [c]
+zipWithExactDef def = fromMaybe def .^^ zipWithExactMay

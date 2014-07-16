@@ -1,5 +1,6 @@
 Changelog for Safe
 
+0.3.7
     Add Def variants of the Exact functions
 0.3.6
     #6, remove unnecessary Ord constraints from maximumBy/minimumBy

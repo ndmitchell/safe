@@ -1,5 +1,6 @@
 Changelog for Safe
 
+0.3.8
     #8, remove unnecessary Ord constraints from Foldable functions
 0.3.7
     Add Def variants of the Exact functions

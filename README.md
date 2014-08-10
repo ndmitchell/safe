@@ -1,4 +1,4 @@
-# Safe [![Build Status](https://travis-ci.org/ndmitchell/safe.svg)](https://travis-ci.org/ndmitchell/safe)
+# Safe [![Hackage version](https://img.shields.io/hackage/v/safe.svg?style=flat)](http://hackage.haskell.org/package/safe) [![Build Status](http://img.shields.io/travis/ndmitchell/safe.svg?style=flat)](https://travis-ci.org/ndmitchell/safe)
 
 A library wrapping `Prelude`/`Data.List` functions that can throw exceptions, such as `head` and `!!`. Each unsafe function has up to four variants, e.g. with `tail`:
 

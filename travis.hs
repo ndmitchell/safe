@@ -1,7 +1,8 @@
 
-import Neil
+import System.Process.Extra
+import Control.Exception.Extra
 
 main :: IO ()
 main = do
-    retry 3 $ cmd "cabal install QuickCheck"
-    cmd "runhaskell Test"
+    retry 3 $ system_ "cabal install QuickCheck"
+    system_ "runhaskell Test"

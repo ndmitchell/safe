@@ -1,4 +1,4 @@
-{-# OPTIONS_GHC -fwarn-unused-imports #-} -- Monoid required < 7.9
+{-# OPTIONS_GHC -fno-warn-unused-imports #-} -- Monoid required < 7.9
 {- |
 'Foldable' functions, with wrappers like the "Safe" module.
 -}

@@ -7,11 +7,11 @@ license-file:   LICENSE
 category:       Unclassified
 author:         Neil Mitchell <ndmitchell@gmail.com>
 maintainer:     Neil Mitchell <ndmitchell@gmail.com>
-copyright:      Neil Mitchell 2007-2014
+copyright:      Neil Mitchell 2007-2015
 homepage:       http://community.haskell.org/~ndm/safe/
 synopsis:       Library of safe (exception free) functions
 bug-reports:    https://github.com/ndmitchell/safe/issues
-tested-with:    GHC==7.8.3, GHC==7.6.3, GHC==7.4.2, GHC==7.2.2
+tested-with:    GHC==7.10.1, GHC==7.8.4, GHC==7.6.3, GHC==7.4.2, GHC==7.2.2
 description:
     A library wrapping @Prelude@/@Data.List@ functions that can throw exceptions, such as @head@ and @!!@.
     Each unsafe function has up to four variants, e.g. with @tail@:
@@ -35,6 +35,7 @@ description:
     * "Safe.Exact" creates crashing versions of functions like @zip@ (errors if the lists are not equal) and @take@ (errors if there are not enough elements), then wraps them to provide safe variants.
 extra-source-files:
     CHANGES.txt
+    README.md
 
 source-repository head
     type:     git

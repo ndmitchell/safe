@@ -40,6 +40,7 @@ module Safe(
     findJustDef, findJustNote,
     elemIndexJustDef, elemIndexJustNote,
     findIndexJustDef, findIndexJustNote,
+    toEnumMay, toEnumDef, toEnumNote, toEnumSafe
     ) where
 
 import Safe.Util
@@ -267,3 +268,23 @@ findIndexJustDef def = fromMaybe def .^ findIndex
 
 findIndexJustNote :: String -> (a -> Bool) -> [a] -> Int
 findIndexJustNote note = fromNote note "findIndexJustNote, no matching value" .^ findIndex
+
+-- From http://stackoverflow.com/questions/2743858/safe-and-polymorphic-toenum
+-- answer by C. A. McCann
+toEnumMay :: (Enum a, Bounded a) => Int -> Maybe a
+toEnumMay i =
+  let r = toEnum i
+      max = maxBound `asTypeOf` r
+      min = minBound `asTypeOf` r
+  in if i >= fromEnum min && i <= fromEnum max
+  then Just r
+  else Nothing
+
+toEnumDef :: (Enum a, Bounded a) => a -> Int -> a
+toEnumDef def = fromMaybe def . toEnumMay
+
+toEnumNote :: (Enum a, Bounded a) => String -> Int -> a
+toEnumNote note = fromNote note "toEnumNote, out of range" . toEnumMay
+
+toEnumSafe :: (Enum a, Bounded a) => Int -> a
+toEnumSafe = toEnumDef minBound

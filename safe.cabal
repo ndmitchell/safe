@@ -8,7 +8,7 @@ category:       Unclassified
 author:         Neil Mitchell <ndmitchell@gmail.com>
 maintainer:     Neil Mitchell <ndmitchell@gmail.com>
 copyright:      Neil Mitchell 2007-2015
-homepage:       http://community.haskell.org/~ndm/safe/
+homepage:       https://github.com/ndmitchell/safe#readme
 synopsis:       Library of safe (exception free) functions
 bug-reports:    https://github.com/ndmitchell/safe/issues
 tested-with:    GHC==7.10.1, GHC==7.8.4, GHC==7.6.3, GHC==7.4.2, GHC==7.2.2

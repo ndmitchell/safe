@@ -1,5 +1,6 @@
 Changelog for Safe
 
+    #9, add Safe toEnum
 0.3.8
     #8, remove unnecessary Ord constraints from Foldable functions
 0.3.7

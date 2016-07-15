@@ -101,7 +101,7 @@ errs a bs = do
             let f xs = " " ++ map (\x -> if sepChar x then ' ' else x) xs ++ " "
             unless (f b `isInfixOf` f s) $ error $ "Not standalone error string, got " ++ show s ++ ", want " ++ show b
 
-sepChar x = x `elem` " ,;."
+sepChar x = isSpace x || x `elem` ",;."
 
 newtype Int10 = Int10 Int deriving Show
 

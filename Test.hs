@@ -9,6 +9,7 @@ import qualified Safe.Foldable as F
 import Control.DeepSeq
 import Control.Exception
 import Control.Monad
+import Data.Char
 import Data.List
 import Data.Maybe
 import System.IO.Unsafe

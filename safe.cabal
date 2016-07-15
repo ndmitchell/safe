@@ -33,7 +33,7 @@ description:
     * "Safe.Foldable" contains safe variants of @Foldable@ functions.
     .
     * "Safe.Exact" creates crashing versions of functions like @zip@ (errors if the lists are not equal) and @take@ (errors if there are not enough elements), then wraps them to provide safe variants.
-extra-source-files:
+extra-doc-files:
     CHANGES.txt
     README.md
 

@@ -53,3 +53,14 @@ library
 
     other-modules:
         Safe.Util
+
+test-suite safe-test
+    type:               exitcode-stdio-1.0
+    main-is:            Test.hs
+    default-language:   Haskell2010
+
+    build-depends:
+        base,
+        deepseq,
+        QuickCheck,
+        safe

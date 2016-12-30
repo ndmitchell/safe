@@ -77,7 +77,7 @@ main = do
                     note "foo" xs ys `errs` ["Safe.Exact." ++ name ++ "ExactNote","foo"]
                     may xs ys === Nothing
         f "zip" zipExact zipExactMay zipExactNote
-        f "zipWith" (zipWithExact (,)) (zipWithExactMay (,)) (flip zipWithExactNote (,))
+        f "zipWith" (zipWithExact (,)) (zipWithExactMay (,)) (`zipWithExactNote` (,))
 
     take 2 (zip3Exact [1,2,3] [1,2,3] [1,2]) === [(1,1,1),(2,2,2)]
     zip3Exact [d1,2] [d1,2,3] [d1,2,3] `errs` ["Safe.Exact.zip3Exact","first list is shorter than the others"]

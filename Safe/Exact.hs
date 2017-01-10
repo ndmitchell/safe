@@ -65,6 +65,17 @@ zipWithExact_ err nil cons = f
         f _ [] = err "first list is longer than the second"
 
 
+{-# INLINE zipWith3Exact_ #-}
+zipWith3Exact_ :: (String -> r) -> r -> (a -> b -> c -> r -> r) -> [a] -> [b] -> [c] -> r
+zipWith3Exact_ err nil cons = f
+    where
+        f (x:xs) (y:ys) (z:zs) = cons x y z $ f xs ys zs
+        f [] [] [] = nil
+        f [] _ _ = err "first list is shorter than the others"
+        f _ [] _ = err "second list is shorter than the others"
+        f _ _ [] = err "third list is shorter than the others"
+
+
 ---------------------------------------------------------------------
 -- TAKE/DROP/SPLIT
 
@@ -161,30 +172,30 @@ zipWithExactDef def = fromMaybe def .^^ zipWithExactMay
 -- >   | length xs == length ys && length xs == length zs = zip3 xs ys zs
 -- >   | otherwise                                        = error "some message"
 zip3Exact :: [a] -> [b] -> [c] -> [(a,b,c)]
-zip3Exact = undefined
+zip3Exact = zipWith3Exact_ (addNote "" "zip3Exact") [] (\a b c xs -> (a, b, c) : xs)
 
 -- |
 -- > zipWith3Exact f xs ys zs =
 -- >   | length xs == length ys && length xs == length zs = zipWith3 f xs ys zs
 -- >   | otherwise                                        = error "some message"
 zipWith3Exact :: (a -> b -> c -> d) -> [a] -> [b] -> [c] -> [d]
-zipWith3Exact f = undefined
+zipWith3Exact f = zipWith3Exact_ (addNote "" "zipWith3Exact") [] (\a b c xs -> f a b c : xs)
 
 
 zip3ExactNote :: String -> [a] -> [b] -> [c]-> [(a,b,c)]
-zip3ExactNote note = undefined
+zip3ExactNote note = zipWith3Exact_ (addNote note "zip3ExectNote") [] (\a b c xs -> (a,b,c) : xs)
 
 zip3ExactMay :: [a] -> [b] -> [c] -> Maybe [(a,b,c)]
-zip3ExactMay = undefined
+zip3ExactMay = zipWith3Exact_ (const Nothing) (Just [])  (\a b c xs -> fmap ((a,b,c) :) xs)
 
 zip3ExactDef :: [(a,b,c)] -> [a] -> [b] -> [c] -> [(a,b,c)]
-zip3ExactDef def = undefined
+zip3ExactDef def = fromMaybe def .^^ zip3ExactMay
 
 zipWith3ExactNote :: String -> (a -> b -> c -> d) -> [a] -> [b] -> [c] -> [d]
-zipWith3ExactNote note f = undefined
+zipWith3ExactNote note f = zipWith3Exact_ (addNote note "zipWith3ExactNote") []  (\a b c xs -> f a b c : xs)
 
 zipWith3ExactMay :: (a -> b -> c -> d) -> [a] -> [b] -> [c] -> Maybe [d]
-zipWith3ExactMay f = undefined
+zipWith3ExactMay f = zipWith3Exact_ (const Nothing) (Just [])  (\a b c xs -> fmap (f a b c :) xs)
 
 zipWith3ExactDef :: [d] -> (a -> b -> c -> d) -> [a] -> [b] -> [c] -> [d]
-zipWith3ExactDef def = undefined
+zipWith3ExactDef def = fromMaybe def .^^^ zipWith3ExactMay

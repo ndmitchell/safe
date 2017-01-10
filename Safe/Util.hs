@@ -11,6 +11,9 @@ import Data.Maybe
 (.^^) :: (b -> c) -> (a1 -> a2 -> a3 -> b) -> a1 -> a2 -> a3 -> c
 (.^^) f g x1 x2 x3 = f (g x1 x2 x3)
 
+(.^^^) :: (b -> c) -> (a1 -> a2 -> a3 -> a4 -> b) -> a1 -> a2 -> a3 -> a4 -> c
+(.^^^) f g x1 x2 x3 x4 = f (g x1 x2 x3 x4)
+
 liftMay :: (a -> Bool) -> (a -> b) -> (a -> Maybe b)
 liftMay test func val = if test val then Nothing else Just $ func val
 

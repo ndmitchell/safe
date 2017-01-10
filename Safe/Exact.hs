@@ -19,12 +19,15 @@ module Safe.Exact(
     -- * New functions
     takeExact, dropExact, splitAtExact,
     zipExact, zipWithExact,
+    zip3Exact, zipWith3Exact,
     -- * Safe wrappers
     takeExactMay, takeExactNote, takeExactDef,
     dropExactMay, dropExactNote, dropExactDef,
     splitAtExactMay, splitAtExactNote, splitAtExactDef,
     zipExactMay, zipExactNote, zipExactDef,
     zipWithExactMay, zipWithExactNote, zipWithExactDef,
+    zip3ExactMay, zip3ExactNote, zip3ExactDef,
+    zipWith3ExactMay, zipWith3ExactNote, zipWith3ExactDef,
     ) where
 
 import Control.Arrow
@@ -151,3 +154,37 @@ zipWithExactMay f = zipWithExact_ (const Nothing) (Just [])  (\a b xs -> fmap (f
 
 zipWithExactDef :: [c] -> (a -> b -> c) -> [a] -> [b] -> [c]
 zipWithExactDef def = fromMaybe def .^^ zipWithExactMay
+
+
+-- |
+-- > zip3Exact xs ys zs =
+-- >   | length xs == length ys && length xs == length zs = zip3 xs ys zs
+-- >   | otherwise                                        = error "some message"
+zip3Exact :: [a] -> [b] -> [c] -> [(a,b,c)]
+zip3Exact = undefined
+
+-- |
+-- > zipWith3Exact f xs ys zs =
+-- >   | length xs == length ys && length xs == length zs = zipWith3 f xs ys zs
+-- >   | otherwise                                        = error "some message"
+zipWith3Exact :: (a -> b -> c -> d) -> [a] -> [b] -> [c] -> [d]
+zipWith3Exact f = undefined
+
+
+zip3ExactNote :: String -> [a] -> [b] -> [c]-> [(a,b,c)]
+zip3ExactNote note = undefined
+
+zip3ExactMay :: [a] -> [b] -> [c] -> Maybe [(a,b,c)]
+zip3ExactMay = undefined
+
+zip3ExactDef :: [(a,b,c)] -> [a] -> [b] -> [c] -> [(a,b,c)]
+zip3ExactDef def = undefined
+
+zipWith3ExactNote :: String -> (a -> b -> c -> d) -> [a] -> [b] -> [c] -> [d]
+zipWith3ExactNote note f = undefined
+
+zipWith3ExactMay :: (a -> b -> c -> d) -> [a] -> [b] -> [c] -> Maybe [d]
+zipWith3ExactMay f = undefined
+
+zipWith3ExactDef :: [d] -> (a -> b -> c -> d) -> [a] -> [b] -> [c] -> [d]
+zipWith3ExactDef def = undefined

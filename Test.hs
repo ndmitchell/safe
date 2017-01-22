@@ -64,6 +64,11 @@ main = do
     zipExact [d1,2] [d1,2,3] `errs` ["Safe.Exact.zipExact","second list is longer than the first"]
     zipExact dNil dNil === []
 
+    predMay (minBound :: Int) === Nothing
+    succMay (maxBound :: Int) === Nothing
+    predMay ((minBound + 1) :: Int) === Just minBound
+    succMay ((maxBound - 1) :: Int) === Just maxBound
+
     quickCheck_ $ \(List10 (xs :: [Int])) x -> do
         let ys = maybeToList x ++ xs
         let res = zip xs ys

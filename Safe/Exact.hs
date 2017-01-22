@@ -183,7 +183,7 @@ zipWith3Exact f = zipWith3Exact_ (addNote "" "zipWith3Exact") [] (\a b c xs -> f
 
 
 zip3ExactNote :: String -> [a] -> [b] -> [c]-> [(a,b,c)]
-zip3ExactNote note = zipWith3Exact_ (addNote note "zip3ExectNote") [] (\a b c xs -> (a,b,c) : xs)
+zip3ExactNote note = zipWith3Exact_ (addNote note "zip3ExactNote") [] (\a b c xs -> (a,b,c) : xs)
 
 zip3ExactMay :: [a] -> [b] -> [c] -> Maybe [(a,b,c)]
 zip3ExactMay = zipWith3Exact_ (const Nothing) (Just [])  (\a b c xs -> fmap ((a,b,c) :) xs)

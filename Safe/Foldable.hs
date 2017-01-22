@@ -20,9 +20,9 @@ module Safe.Foldable(
 import Safe.Util
 import Data.Foldable as F
 import Data.Maybe
-#if !MIN_VERSION_base(4,8,0)
 import Data.Monoid
-#endif
+import Prelude
+
 
 ---------------------------------------------------------------------
 -- UTILITIES
@@ -31,10 +31,10 @@ fromNote :: String -> String -> Maybe a -> a
 fromNote = fromNoteModule "Safe.Foldable"
 
 isNull :: Foldable t => t a -> Bool
-#if MIN_VERSION_base(4,8,0)
-isNull = F.null
-#else
+#if __GLASGOW_HASKELL__ < 710
 isNull = null . toList
+#else
+isNull = F.null
 #endif
 
 ---------------------------------------------------------------------

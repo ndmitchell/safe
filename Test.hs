@@ -78,6 +78,28 @@ main = do
         f "zip" zipExact zipExactMay zipExactNote
         f "zipWith" (zipWithExact (,)) (zipWithExactMay (,)) (flip zipWithExactNote (,))
 
+    take 2 (zip3Exact [1,2,3] [1,2,3] [1,2]) === [(1,1,1),(2,2,2)]
+    zip3Exact [d1,2] [d1,2,3] [d1,2,3] `errs` ["Safe.Exact.zip3Exact","first list is shorter than the others"]
+    zip3Exact [d1,2,3] [d1,2] [d1,2,3] `errs` ["Safe.Exact.zip3Exact","second list is shorter than the others"]
+    zip3Exact [d1,2,3] [d1,2,3] [d1,2] `errs` ["Safe.Exact.zip3Exact","third list is shorter than the others"]
+    zip3Exact dNil dNil dNil === []
+
+    quickCheck $ \(List10 (xs :: [Int])) x1 x2 -> do
+        let ys = maybeToList x1 ++ xs
+        let zs = maybeToList x2 ++ xs
+        let res = zip3 xs ys zs
+        let f name exact may note =
+                if isNothing x1 && isNothing x2 then do
+                    exact xs ys zs === res
+                    note "foo" xs ys zs === res
+                    may xs ys zs === Just res
+                else do
+                    exact xs ys zs `err` ("Safe.Exact." ++ name ++ "Exact")
+                    note "foo" xs ys zs `errs` ["Safe.Exact." ++ name ++ "ExactNote","foo"]
+                    may xs ys zs === Nothing
+        f "zip3" zip3Exact zip3ExactMay zip3ExactNote
+        f "zipWith3" (zipWith3Exact (,,)) (zipWith3ExactMay (,,)) (flip zipWith3ExactNote (,,))
+
 
 ---------------------------------------------------------------------
 -- UTILITIES

@@ -36,12 +36,14 @@ module Safe(
     fromJustDef, fromJustNote,
     assertNote,
     atMay, atDef, atNote,
-    readMay, readDef, readNote,
+    readMay, readDef, readNote, readEitherSafe,
     lookupJustDef, lookupJustNote,
     findJustDef, findJustNote,
     elemIndexJustDef, elemIndexJustNote,
     findIndexJustDef, findIndexJustNote,
-    toEnumMay, toEnumDef, toEnumNote, toEnumSafe
+    toEnumMay, toEnumDef, toEnumNote, toEnumSafe,
+    succMay, succDef, succNote, succSafe,
+    predMay, predDef, predNote, predSafe,
     ) where
 
 import Safe.Util
@@ -51,7 +53,10 @@ import Data.Maybe
 ---------------------------------------------------------------------
 -- UTILITIES
 
+fromNote :: String -> String -> Maybe a -> a
 fromNote = fromNoteModule "Safe"
+
+fromNoteEither :: String -> String -> Either String a -> a
 fromNoteEither = fromNoteEitherModule "Safe"
 
 
@@ -71,17 +76,6 @@ at_ xs o | o < 0 = Left $ "index must not be negative, index=" ++ show o
     where f 0 (x:xs) = Right x
           f i (x:xs) = f (i-1) xs
           f i [] = Left $ "index too large, index=" ++ show o ++ ", length=" ++ show (o-i)
-
-
-read_ :: Read a => String -> Either String a
-read_ s = case [x | (x,t) <- reads s, ("","") <- lex t] of
-        [x] -> Right x
-        []  -> Left $ "no parse on " ++ prefix
-        _   -> Left $ "ambiguous parse on " ++ prefix
-    where
-        maxLength = 15
-        prefix = '\"' : a ++ if length s <= maxLength then (b ++ "\"") else "...\""
-            where (a,b) = splitAt (maxLength - 3) s
 
 
 ---------------------------------------------------------------------
@@ -225,15 +219,26 @@ atDef def = fromMaybe def .^ atMay
 atNote :: String -> [a] -> Int -> a
 atNote note = fromNoteEither note "atNote" .^ at_
 
+-- | This function provides a more precise error message than 'readEither' from 'base'.
+readEitherSafe :: Read a => String -> Either String a
+readEitherSafe s = case [x | (x,t) <- reads s, ("","") <- lex t] of
+        [x] -> Right x
+        []  -> Left $ "no parse on " ++ prefix
+        _   -> Left $ "ambiguous parse on " ++ prefix
+    where
+        maxLength = 15
+        prefix = '\"' : a ++ if length s <= maxLength then b ++ "\"" else "...\""
+            where (a,b) = splitAt (maxLength - 3) s
 
 readMay :: Read a => String -> Maybe a
-readMay = eitherToMaybe . read_
+readMay = eitherToMaybe . readEitherSafe
 
 readDef :: Read a => a -> String -> a
 readDef def = fromMaybe def . readMay
 
+-- | 'readNote' uses 'readEitherSafe' for the error message.
 readNote :: Read a => String -> String -> a
-readNote note = fromNoteEither note "readNote" . read_
+readNote note = fromNoteEither note "readNote" . readEitherSafe
 
 -- |
 -- > lookupJust key = fromJust . lookup key
@@ -298,3 +303,27 @@ toEnumNote note = fromNote note "toEnumNote, out of range" . toEnumMay
 
 toEnumSafe :: (Enum a, Bounded a) => Int -> a
 toEnumSafe = toEnumDef minBound
+
+succMay :: (Enum a, Eq a, Bounded a) => a -> Maybe a
+succMay = liftMay (== maxBound) succ
+
+succDef :: (Enum a, Eq a, Bounded a) => a -> a -> a
+succDef def = fromMaybe def . succMay
+
+succNote :: (Enum a, Eq a, Bounded a) => String -> a -> a
+succNote note = fromNote note "succNote, out of range" . succMay
+
+succSafe :: (Enum a, Eq a, Bounded a) => a -> a
+succSafe = succDef maxBound
+
+predMay :: (Enum a, Eq a, Bounded a) => a -> Maybe a
+predMay = liftMay (== minBound) pred
+
+predDef :: (Enum a, Eq a, Bounded a) => a -> a -> a
+predDef def = fromMaybe def . predMay
+
+predNote :: (Enum a, Eq a, Bounded a) => String -> a -> a
+predNote note = fromNote note "predNote, out of range" . predMay
+
+predSafe :: (Enum a, Eq a, Bounded a) => a -> a
+predSafe = predDef minBound

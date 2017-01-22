@@ -64,6 +64,11 @@ main = do
     zipExact [d1,2] [d1,2,3] `errs` ["Safe.Exact.zipExact","second list is longer than the first"]
     zipExact dNil dNil === []
 
+    predMay (minBound :: Int) === Nothing
+    succMay (maxBound :: Int) === Nothing
+    predMay ((minBound + 1) :: Int) === Just minBound
+    succMay ((maxBound - 1) :: Int) === Just maxBound
+
     quickCheck_ $ \(List10 (xs :: [Int])) x -> do
         let ys = maybeToList x ++ xs
         let res = zip xs ys
@@ -77,7 +82,7 @@ main = do
                     note "foo" xs ys `errs` ["Safe.Exact." ++ name ++ "ExactNote","foo"]
                     may xs ys === Nothing
         f "zip" zipExact zipExactMay zipExactNote
-        f "zipWith" (zipWithExact (,)) (zipWithExactMay (,)) (flip zipWithExactNote (,))
+        f "zipWith" (zipWithExact (,)) (zipWithExactMay (,)) (`zipWithExactNote` (,))
 
     take 2 (zip3Exact [1,2,3] [1,2,3] [1,2]) === [(1,1,1),(2,2,2)]
     zip3Exact [d1,2] [d1,2,3] [d1,2,3] `errs` ["Safe.Exact.zip3Exact","first list is shorter than the others"]

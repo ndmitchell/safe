@@ -1,4 +1,4 @@
-{-# OPTIONS_GHC -fno-warn-unused-imports #-} -- Monoid required < 7.9
+{-# LANGUAGE CPP #-}
 {- |
 'Foldable' functions, with wrappers like the "Safe" module.
 -}
@@ -19,18 +19,23 @@ module Safe.Foldable(
 
 import Safe.Util
 import Data.Foldable as F
-import Data.Monoid
 import Data.Maybe
-
+#if !MIN_VERSION_base(4,8,0)
+import Data.Monoid
+#endif
 
 ---------------------------------------------------------------------
 -- UTILITIES
 
+fromNote :: String -> String -> Maybe a -> a
 fromNote = fromNoteModule "Safe.Foldable"
 
 isNull :: Foldable t => t a -> Bool
+#if MIN_VERSION_base(4,8,0)
+isNull = F.null
+#else
 isNull = null . toList
-
+#endif
 
 ---------------------------------------------------------------------
 -- WRAPPERS
@@ -59,15 +64,15 @@ minimumNote, maximumNote :: (Foldable t, Ord a) => String -> t a -> a
 minimumNote note = fromNote note "minimumNote on empty" . minimumMay
 maximumNote note = fromNote note "maximumNote on empty" . maximumMay
 
-minimumByMay, maximumByMay :: (Foldable t) => (a -> a -> Ordering) -> t a -> Maybe a
+minimumByMay, maximumByMay :: Foldable t => (a -> a -> Ordering) -> t a -> Maybe a
 minimumByMay = liftMay isNull . F.minimumBy
 maximumByMay = liftMay isNull . F.maximumBy
 
-minimumByDef, maximumByDef :: (Foldable t) => a -> (a -> a -> Ordering) -> t a -> a
+minimumByDef, maximumByDef :: Foldable t => a -> (a -> a -> Ordering) -> t a -> a
 minimumByDef def = fromMaybe def .^ minimumByMay
 maximumByDef def = fromMaybe def .^ maximumByMay
 
-minimumByNote, maximumByNote :: (Foldable t) => String -> (a -> a -> Ordering) -> t a -> a
+minimumByNote, maximumByNote :: Foldable t => String -> (a -> a -> Ordering) -> t a -> a
 minimumByNote note = fromNote note "minimumByNote on empty" .^ minimumByMay
 maximumByNote note = fromNote note "maximumByNote on empty" .^ maximumByMay
 

@@ -37,6 +37,7 @@ import Safe.Util
 ---------------------------------------------------------------------
 -- HELPERS
 
+addNote :: String -> String -> String -> a
 addNote note fun msg = error $
     "Safe.Exact." ++ fun ++ ", " ++ msg ++ (if null note then "" else ", " ++ note)
 

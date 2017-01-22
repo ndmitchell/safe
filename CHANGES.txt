@@ -1,5 +1,8 @@
 Changelog for Safe
 
+master
+    add Safe succ and pred
+    expose readEitherSafe which provides better error messages than readEither from base
     #14, add Safe zip3Exact
 0.3.10
     #15, add Safe cycle

@@ -13,6 +13,7 @@ import Data.Char
 import Data.List
 import Data.Maybe
 import System.IO.Unsafe
+import Test.QuickCheck.Test
 import Test.QuickCheck hiding ((===))
 
 
@@ -42,7 +43,7 @@ main = do
     takeExact (-1) [d1,2] `errs` ["Safe.Exact.takeExact","negative","index=-1"]
     takeExact 1 (takeExact 3 [d1,2]) === [1] -- test is lazy
 
-    quickCheck $ \(Int10 i) (List10 (xs :: [Int])) -> do
+    quickCheck_ $ \(Int10 i) (List10 (xs :: [Int])) -> do
         let (t,d) = splitAt i xs
         let good = length t == i
         let f name exact may note res =
@@ -63,7 +64,7 @@ main = do
     zipExact [d1,2] [d1,2,3] `errs` ["Safe.Exact.zipExact","second list is longer than the first"]
     zipExact dNil dNil === []
 
-    quickCheck $ \(List10 (xs :: [Int])) x -> do
+    quickCheck_ $ \(List10 (xs :: [Int])) x -> do
         let ys = maybeToList x ++ xs
         let res = zip xs ys
         let f name exact may note =
@@ -84,7 +85,7 @@ main = do
     zip3Exact [d1,2,3] [d1,2,3] [d1,2] `errs` ["Safe.Exact.zip3Exact","third list is shorter than the others"]
     zip3Exact dNil dNil dNil === []
 
-    quickCheck $ \(List10 (xs :: [Int])) x1 x2 -> do
+    quickCheck_ $ \(List10 (xs :: [Int])) x1 x2 -> do
         let ys = maybeToList x1 ++ xs
         let zs = maybeToList x2 ++ xs
         let res = zip3 xs ys zs
@@ -103,6 +104,11 @@ main = do
 
 ---------------------------------------------------------------------
 -- UTILITIES
+
+quickCheck_ prop = do
+    r <- quickCheckResult prop
+    unless (isSuccess r) $ error "Test failed"
+
 
 d1 = 1 :: Double
 dNil = [] :: [Double]

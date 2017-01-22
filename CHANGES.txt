@@ -1,5 +1,6 @@
 Changelog for Safe
 
+0.3.11
     #16, add Safe succ and pred
     #16, add readEitherSafe for better errors than readEither
     #14, add Safe zip3Exact

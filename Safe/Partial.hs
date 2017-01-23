@@ -7,10 +7,13 @@ module Safe.Partial(
   Partial
   ) where
 
-#if MIN_VERSION_base(4,5,0)
-import GHC.Stack
-#endif
+#if MIN_VERSION_base(4,9,0)
+import GHC.Stack (HasCallStack)
+#elif MIN_VERSION_base(4,8,1)
+import GHC.Stack (CallStack)
+#else
 import GHC.Exts (Constraint)
+#endif
 
 -- | A constraint synonym which denotes that the function is partial, and will
 --   (on GHC 8.* and up) produce a stack trace on failure.

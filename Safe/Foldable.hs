@@ -1,4 +1,6 @@
-{-# LANGUAGE CPP #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE CPP              #-}
+{-# LANGUAGE ConstraintKinds  #-}
 {- |
 'Foldable' functions, with wrappers like the "Safe" module.
 -}

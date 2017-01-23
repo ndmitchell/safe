@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE ConstraintKinds  #-}
 {- |
 Provides functions that raise errors in corner cases instead of returning \"best effort\"
 results, then provides wrappers like the "Safe" module. For example:

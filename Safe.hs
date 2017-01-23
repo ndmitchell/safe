@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE ConstraintKinds  #-}
 {- |
 A module wrapping @Prelude@/@Data.List@ functions that can throw exceptions, such as @head@ and @!!@.
 Each unsafe function has up to four variants, e.g. with @tail@:
@@ -8,9 +10,12 @@ Each unsafe function has up to four variants, e.g. with @tail@:
 
 * @'tailDef' :: /[a]/ -> [a] -> [a]@, takes a default to return on errors.
 
-* @'tailNote' :: /String/ -> [a] -> [a]@, takes an extra argument which supplements the error message.
+* @'tailNote' :: 'Partial' => /String/ -> [a] -> [a]@, takes an extra argument which supplements the error message.
 
 * @'tailSafe' :: [a] -> [a]@, returns some sensible default if possible, @[]@ in the case of @tail@.
+
+All functions marked with the @'Partial'@ constraint are not total, and will produce stack traces on error, on GHC
+versions which support them (see "GHC.Stack").
 
 This module also introduces some new functions, documented at the top of the module.
 -}

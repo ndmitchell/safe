@@ -1,4 +1,5 @@
-
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE ConstraintKinds  #-}
 -- | Internal utilities.
 module Safe.Util where
 

@@ -33,11 +33,12 @@ module Safe.Exact(
 import Control.Arrow
 import Data.Maybe
 import Safe.Util
+import Safe.Partial
 
 ---------------------------------------------------------------------
 -- HELPERS
 
-addNote :: String -> String -> String -> a
+addNote :: Partial => String -> String -> String -> a
 addNote note fun msg = error $
     "Safe.Exact." ++ fun ++ ", " ++ msg ++ (if null note then "" else ", " ++ note)
 
@@ -46,7 +47,7 @@ addNote note fun msg = error $
 -- IMPLEMENTATIONS
 
 {-# INLINE splitAtExact_ #-}
-splitAtExact_ :: (String -> r) -> ([a] -> r) -> (a -> r -> r) -> Int -> [a] -> r
+splitAtExact_ :: Partial => (String -> r) -> ([a] -> r) -> (a -> r -> r) -> Int -> [a] -> r
 splitAtExact_ err nil cons o xs
     | o < 0 = err $ "index must not be negative, index=" ++ show o
     | otherwise = f o xs
@@ -57,7 +58,7 @@ splitAtExact_ err nil cons o xs
 
 
 {-# INLINE zipWithExact_ #-}
-zipWithExact_ :: (String -> r) -> r -> (a -> b -> r -> r) -> [a] -> [b] -> r
+zipWithExact_ :: Partial => (String -> r) -> r -> (a -> b -> r -> r) -> [a] -> [b] -> r
 zipWithExact_ err nil cons = f
     where
         f (x:xs) (y:ys) = cons x y $ f xs ys
@@ -67,7 +68,7 @@ zipWithExact_ err nil cons = f
 
 
 {-# INLINE zipWith3Exact_ #-}
-zipWith3Exact_ :: (String -> r) -> r -> (a -> b -> c -> r -> r) -> [a] -> [b] -> [c] -> r
+zipWith3Exact_ :: Partial => (String -> r) -> r -> (a -> b -> c -> r -> r) -> [a] -> [b] -> [c] -> r
 zipWith3Exact_ err nil cons = f
     where
         f (x:xs) (y:ys) (z:zs) = cons x y z $ f xs ys zs
@@ -84,25 +85,25 @@ zipWith3Exact_ err nil cons = f
 -- > takeExact n xs =
 -- >   | n >= 0 && n <= length xs = take n xs
 -- >   | otherwise                = error "some message"
-takeExact :: Int -> [a] -> [a]
+takeExact :: Partial => Int -> [a] -> [a]
 takeExact = splitAtExact_ (addNote "" "takeExact") (const []) (:)
 
 -- |
 -- > dropExact n xs =
 -- >   | n >= 0 && n <= length xs = drop n xs
 -- >   | otherwise                = error "some message"
-dropExact :: Int -> [a] -> [a]
+dropExact :: Partial => Int -> [a] -> [a]
 dropExact = splitAtExact_ (addNote "" "dropExact") id (flip const)
 
 -- |
 -- > splitAtExact n xs =
 -- >   | n >= 0 && n <= length xs = splitAt n xs
 -- >   | otherwise                = error "some message"
-splitAtExact :: Int -> [a] -> ([a], [a])
+splitAtExact :: Partial => Int -> [a] -> ([a], [a])
 splitAtExact = splitAtExact_ (addNote "" "splitAtExact")
     (\x -> ([], x)) (\a b -> first (a:) b)
 
-takeExactNote :: String -> Int -> [a] -> [a]
+takeExactNote :: Partial => String -> Int -> [a] -> [a]
 takeExactNote note = splitAtExact_ (addNote note "takeExactNote") (const []) (:)
 
 takeExactMay :: Int -> [a] -> Maybe [a]
@@ -111,7 +112,7 @@ takeExactMay = splitAtExact_ (const Nothing) (const $ Just []) (\a -> fmap (a:))
 takeExactDef :: [a] -> Int -> [a] -> [a]
 takeExactDef def = fromMaybe def .^ takeExactMay
 
-dropExactNote :: String -> Int -> [a] -> [a]
+dropExactNote :: Partial => String -> Int -> [a] -> [a]
 dropExactNote note = splitAtExact_ (addNote note "dropExactNote") id (flip const)
 
 dropExactMay :: Int -> [a] -> Maybe [a]
@@ -120,7 +121,7 @@ dropExactMay = splitAtExact_ (const Nothing) Just (flip const)
 dropExactDef :: [a] -> Int -> [a] -> [a]
 dropExactDef def = fromMaybe def .^ dropExactMay
 
-splitAtExactNote :: String -> Int -> [a] -> ([a], [a])
+splitAtExactNote :: Partial => String -> Int -> [a] -> ([a], [a])
 splitAtExactNote note = splitAtExact_ (addNote note "splitAtExactNote")
     (\x -> ([], x)) (\a b -> first (a:) b)
 
@@ -138,18 +139,18 @@ splitAtExactDef def = fromMaybe def .^ splitAtExactMay
 -- > zipExact xs ys =
 -- >   | length xs == length ys = zip xs ys
 -- >   | otherwise              = error "some message"
-zipExact :: [a] -> [b] -> [(a,b)]
+zipExact :: Partial => [a] -> [b] -> [(a,b)]
 zipExact = zipWithExact_ (addNote "" "zipExact") []  (\a b xs -> (a,b) : xs)
 
 -- |
 -- > zipWithExact f xs ys =
 -- >   | length xs == length ys = zipWith f xs ys
 -- >   | otherwise              = error "some message"
-zipWithExact :: (a -> b -> c) -> [a] -> [b] -> [c]
+zipWithExact :: Partial => (a -> b -> c) -> [a] -> [b] -> [c]
 zipWithExact f = zipWithExact_ (addNote "" "zipWithExact") [] (\a b xs -> f a b : xs)
 
 
-zipExactNote :: String -> [a] -> [b] -> [(a,b)]
+zipExactNote :: Partial => String -> [a] -> [b] -> [(a,b)]
 zipExactNote note = zipWithExact_ (addNote note "zipExactNote") []  (\a b xs -> (a,b) : xs)
 
 zipExactMay :: [a] -> [b] -> Maybe [(a,b)]
@@ -158,7 +159,7 @@ zipExactMay = zipWithExact_ (const Nothing) (Just [])  (\a b xs -> fmap ((a,b) :
 zipExactDef :: [(a,b)] -> [a] -> [b] -> [(a,b)]
 zipExactDef def = fromMaybe def .^ zipExactMay
 
-zipWithExactNote :: String -> (a -> b -> c) -> [a] -> [b] -> [c]
+zipWithExactNote :: Partial => String -> (a -> b -> c) -> [a] -> [b] -> [c]
 zipWithExactNote note f = zipWithExact_ (addNote note "zipWithExactNote") []  (\a b xs -> f a b : xs)
 
 zipWithExactMay :: (a -> b -> c) -> [a] -> [b] -> Maybe [c]
@@ -172,18 +173,18 @@ zipWithExactDef def = fromMaybe def .^^ zipWithExactMay
 -- > zip3Exact xs ys zs =
 -- >   | length xs == length ys && length xs == length zs = zip3 xs ys zs
 -- >   | otherwise                                        = error "some message"
-zip3Exact :: [a] -> [b] -> [c] -> [(a,b,c)]
+zip3Exact :: Partial => [a] -> [b] -> [c] -> [(a,b,c)]
 zip3Exact = zipWith3Exact_ (addNote "" "zip3Exact") [] (\a b c xs -> (a, b, c) : xs)
 
 -- |
 -- > zipWith3Exact f xs ys zs =
 -- >   | length xs == length ys && length xs == length zs = zipWith3 f xs ys zs
 -- >   | otherwise                                        = error "some message"
-zipWith3Exact :: (a -> b -> c -> d) -> [a] -> [b] -> [c] -> [d]
+zipWith3Exact :: Partial => (a -> b -> c -> d) -> [a] -> [b] -> [c] -> [d]
 zipWith3Exact f = zipWith3Exact_ (addNote "" "zipWith3Exact") [] (\a b c xs -> f a b c : xs)
 
 
-zip3ExactNote :: String -> [a] -> [b] -> [c]-> [(a,b,c)]
+zip3ExactNote :: Partial => String -> [a] -> [b] -> [c]-> [(a,b,c)]
 zip3ExactNote note = zipWith3Exact_ (addNote note "zip3ExactNote") [] (\a b c xs -> (a,b,c) : xs)
 
 zip3ExactMay :: [a] -> [b] -> [c] -> Maybe [(a,b,c)]
@@ -192,7 +193,7 @@ zip3ExactMay = zipWith3Exact_ (const Nothing) (Just [])  (\a b c xs -> fmap ((a,
 zip3ExactDef :: [(a,b,c)] -> [a] -> [b] -> [c] -> [(a,b,c)]
 zip3ExactDef def = fromMaybe def .^^ zip3ExactMay
 
-zipWith3ExactNote :: String -> (a -> b -> c -> d) -> [a] -> [b] -> [c] -> [d]
+zipWith3ExactNote :: Partial => String -> (a -> b -> c -> d) -> [a] -> [b] -> [c] -> [d]
 zipWith3ExactNote note f = zipWith3Exact_ (addNote note "zipWith3ExactNote") []  (\a b c xs -> f a b c : xs)
 
 zipWith3ExactMay :: (a -> b -> c -> d) -> [a] -> [b] -> [c] -> Maybe [d]

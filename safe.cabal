@@ -50,6 +50,7 @@ library
         Safe
         Safe.Exact
         Safe.Foldable
+        Safe.Partial
 
     other-modules:
         Safe.Util

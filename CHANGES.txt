@@ -1,5 +1,7 @@
 Changelog for Safe
 
+    #19, add Safe.Partial exposing a Partial typeclass
+    #19, add support for GHC call stacks
 0.3.11
     #16, add Safe succ and pred
     #16, add readEitherSafe for better errors than readEither

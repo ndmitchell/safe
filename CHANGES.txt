@@ -1,5 +1,6 @@
 Changelog for Safe
 
+0.3.13
     #20, require GHC 7.4 or above
 0.3.12
     #19, add Safe.Partial exposing a Partial typeclass

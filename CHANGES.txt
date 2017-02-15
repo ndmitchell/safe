@@ -1,5 +1,6 @@
 Changelog for Safe
 
+0.3.14
     #20, fix for GHC 7.10.1
 0.3.13
     #20, require GHC 7.4 or above

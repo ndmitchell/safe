@@ -58,6 +58,7 @@ main = do
         f "take" takeExact takeExactMay takeExactNote t
         f "drop" dropExact dropExactMay dropExactNote d
         f "splitAt" splitAtExact splitAtExactMay splitAtExactNote (t, d)
+        return True
 
     take 2 (zipExact [1,2,3] [1,2]) === [(1,1),(2,2)]
     zipExact [d1,2,3] [d1,2] `errs` ["Safe.Exact.zipExact","first list is longer than the second"]
@@ -83,6 +84,7 @@ main = do
                     may xs ys === Nothing
         f "zip" zipExact zipExactMay zipExactNote
         f "zipWith" (zipWithExact (,)) (zipWithExactMay (,)) (`zipWithExactNote` (,))
+        return True
 
     take 2 (zip3Exact [1,2,3] [1,2,3] [1,2]) === [(1,1,1),(2,2,2)]
     zip3Exact [d1,2] [d1,2,3] [d1,2,3] `errs` ["Safe.Exact.zip3Exact","first list is shorter than the others"]
@@ -105,6 +107,7 @@ main = do
                     may xs ys zs === Nothing
         f "zip3" zip3Exact zip3ExactMay zip3ExactNote
         f "zipWith3" (zipWith3Exact (,,)) (zipWith3ExactMay (,,)) (flip zipWith3ExactNote (,,))
+        return True
 
 
 ---------------------------------------------------------------------
@@ -146,9 +149,6 @@ newtype List10 a = List10 [a] deriving Show
 
 instance Arbitrary a => Arbitrary (List10 a) where
     arbitrary = do i <- choose (0, 10); fmap List10 $ vector i
-
-instance Testable () where
-    property () = property True
 
 instance Testable a => Testable (IO a) where
     property = property . unsafePerformIO

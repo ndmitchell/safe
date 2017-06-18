@@ -1,5 +1,6 @@
 Changelog for Safe
 
+0.3.15
     Support QuickCheck 2.10
 0.3.14
     #20, fix for GHC 7.10.1

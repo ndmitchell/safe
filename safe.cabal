@@ -60,6 +60,12 @@ test-suite safe-test
     main-is:            Test.hs
     default-language:   Haskell2010
 
+    other-modules:
+        Safe
+        Safe.Exact
+        Safe.Foldable
+        Safe.Partial
+        Safe.Util
     build-depends:
         base,
         deepseq,

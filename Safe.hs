@@ -49,9 +49,11 @@ module Safe(
     toEnumMay, toEnumDef, toEnumNote, toEnumSafe,
     succMay, succDef, succNote, succSafe,
     predMay, predDef, predNote, predSafe,
+    indexMay, indexDef, indexNote,
     ) where
 
 import Safe.Util
+import Data.Ix
 import Data.List
 import Data.Maybe
 import Safe.Partial
@@ -333,3 +335,12 @@ predNote note = fromNote note "predNote, out of range" . predMay
 
 predSafe :: (Enum a, Eq a, Bounded a) => a -> a
 predSafe = predDef minBound
+
+indexMay :: Ix a => (a, a) -> a -> Maybe Int
+indexMay b i = if inRange b i then Just (index b i) else Nothing
+
+indexDef :: Ix a => Int -> (a, a) -> a -> Int
+indexDef def b = fromMaybe def . indexMay b
+
+indexNote :: Ix a => String -> (a, a) -> a -> Int
+indexNote note b = fromNote note "indexNote, out of range" . indexMay b

@@ -136,7 +136,7 @@ headDef, lastDef :: a -> [a] -> a
 headDef def = fromMaybe def . headMay
 lastDef def = fromMaybe def . lastMay
 
-headNote, lastNote :: String -> [a] -> a
+headNote, lastNote :: Partial => String -> [a] -> a
 headNote note = fromNote note "headNote []" . headMay
 lastNote note = fromNote note "lastNote []" . lastMay
 

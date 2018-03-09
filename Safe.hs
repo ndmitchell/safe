@@ -250,7 +250,7 @@ readNote note = fromNoteEither note "readNote" . readEitherSafe
 
 -- |
 -- > lookupJust key = fromJust . lookup key
-lookupJust :: Eq a => a -> [(a,b)] -> b
+lookupJust :: (Eq a, Partial) => a -> [(a,b)] -> b
 lookupJust = fromNote "" "lookupJust, no matching value" .^ lookup
 
 lookupJustDef :: Eq a => b -> a -> [(a,b)] -> b
@@ -272,7 +272,7 @@ findJustNote note = fromNote note "findJustNote, no matching value" .^ find
 
 -- |
 -- > elemIndexJust op = fromJust . elemIndex op
-elemIndexJust :: Eq a => a -> [a] -> Int
+elemIndexJust :: (Partial, Eq a) => a -> [a] -> Int
 elemIndexJust = fromNote "" "elemIndexJust, no matching value" .^ elemIndex
 
 elemIndexJustDef :: Eq a => Int -> a -> [a] -> Int
@@ -342,5 +342,5 @@ indexMay b i = if inRange b i then Just (index b i) else Nothing
 indexDef :: Ix a => Int -> (a, a) -> a -> Int
 indexDef def b = fromMaybe def . indexMay b
 
-indexNote :: Ix a => String -> (a, a) -> a -> Int
+indexNote :: (Partial, Ix a) => String -> (a, a) -> a -> Int
 indexNote note b = fromNote note "indexNote, out of range" . indexMay b

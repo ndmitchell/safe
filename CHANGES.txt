@@ -1,5 +1,6 @@
 Changelog for Safe
 
+0.3.17, released 2018-03-09
     Improve the display of errors, less internal callstack
     Add a few missing Partial constraints
 0.3.16, released 2018-01-06

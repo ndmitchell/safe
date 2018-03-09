@@ -48,8 +48,8 @@ foldl1May = liftMay isNull . F.foldl1
 foldr1May = liftMay isNull . F.foldr1
 
 foldl1Note, foldr1Note :: (Partial, Foldable t) => String -> (a -> a -> a) -> t a -> a
-foldl1Note note = fromNote note "foldl1Note on empty" .^ foldl1May
-foldr1Note note = fromNote note "foldr1Note on empty" .^ foldr1May
+foldl1Note note f x = withFrozenCallStack $ fromNote note "foldl1Note on empty" $ foldl1May f x
+foldr1Note note f x = withFrozenCallStack $ fromNote note "foldr1Note on empty" $ foldr1May f x
 
 foldl1Def, foldr1Def :: Foldable t => a -> (a -> a -> a) -> t a -> a
 foldl1Def def = fromMaybe def .^ foldl1May
@@ -64,8 +64,8 @@ minimumDef def = fromMaybe def . minimumMay
 maximumDef def = fromMaybe def . maximumMay
 
 minimumNote, maximumNote :: (Partial, Foldable t, Ord a) => String -> t a -> a
-minimumNote note = fromNote note "minimumNote on empty" . minimumMay
-maximumNote note = fromNote note "maximumNote on empty" . maximumMay
+minimumNote note x = withFrozenCallStack $ fromNote note "minimumNote on empty" $ minimumMay x
+maximumNote note x = withFrozenCallStack $ fromNote note "maximumNote on empty" $ maximumMay x
 
 minimumByMay, maximumByMay :: Foldable t => (a -> a -> Ordering) -> t a -> Maybe a
 minimumByMay = liftMay isNull . F.minimumBy
@@ -76,19 +76,19 @@ minimumByDef def = fromMaybe def .^ minimumByMay
 maximumByDef def = fromMaybe def .^ maximumByMay
 
 minimumByNote, maximumByNote :: (Partial, Foldable t) => String -> (a -> a -> Ordering) -> t a -> a
-minimumByNote note = fromNote note "minimumByNote on empty" .^ minimumByMay
-maximumByNote note = fromNote note "maximumByNote on empty" .^ maximumByMay
+minimumByNote note f x = withFrozenCallStack $ fromNote note "minimumByNote on empty" $ minimumByMay f x
+maximumByNote note f x = withFrozenCallStack $ fromNote note "maximumByNote on empty" $ maximumByMay f x
 
 -- |
 -- > findJust op = fromJust . find op
 findJust :: (Partial, Foldable t) => (a -> Bool) -> t a -> a
-findJust = fromNote "" "findJust, no matching value" .^ F.find
+findJust f x = withFrozenCallStack $ fromNote "" "findJust, no matching value" $ F.find f x
 
 findJustDef :: Foldable t => a -> (a -> Bool) -> t a -> a
 findJustDef def = fromMaybe def .^ F.find
 
 findJustNote :: (Partial, Foldable t) => String -> (a -> Bool) -> t a -> a
-findJustNote note = fromNote note "findJustNote, no matching value" .^ F.find
+findJustNote note f x = withFrozenCallStack $ fromNote note "findJustNote, no matching value" $ F.find f x
 
 
 ---------------------------------------------------------------------

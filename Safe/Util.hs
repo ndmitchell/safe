@@ -1,10 +1,26 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE ConstraintKinds  #-}
+{-# LANGUAGE CPP              #-}
+
 -- | Internal utilities.
-module Safe.Util where
+module Safe.Util(
+    fromNoteModule, fromNoteEitherModule,
+    liftMay,
+    (.^), (.^^), (.^^^),
+    eitherToMaybe,
+    withFrozenCallStack
+    ) where
 
 import Data.Maybe
 import Safe.Partial
+
+-- Let things work through ghci alone
+#if __GLASGOW_HASKELL__ >= 800
+import GHC.Stack
+#else
+withFrozenCallStack :: a -> a
+withFrozenCallStack = id
+#endif
 
 
 (.^) :: Partial => (b -> c) -> (a1 -> a2 -> b) -> a1 -> a2 -> c

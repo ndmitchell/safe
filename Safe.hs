@@ -75,7 +75,7 @@ fromNoteEither = fromNoteEitherModule "Safe"
 --   has decided to exit because of invalid user input, or the user pressed
 --   quit etc. This function allows 'error' to be reserved for programmer errors.
 abort :: Partial => String -> a
-abort = error
+abort x = withFrozenCallStack (error x)
 
 
 at_ :: [a] -> Int -> Either String a
@@ -105,7 +105,7 @@ tailDef def = fromMaybe def . tailMay
 -- > tailNote "help me" [] = error "Safe.tailNote [], help me"
 -- > tailNote "help me" [1,3,4] = [3,4]
 tailNote :: Partial => String -> [a] -> [a]
-tailNote note = fromNote note "tailNote []" . tailMay
+tailNote note x = withFrozenCallStack $ fromNote note "tailNote []" $ tailMay x
 
 -- |
 -- > tailSafe [] = []
@@ -121,7 +121,7 @@ initDef :: [a] -> [a] -> [a]
 initDef def = fromMaybe def . initMay
 
 initNote :: Partial => String -> [a] -> [a]
-initNote note = fromNote note "initNote []" . initMay
+initNote note x = withFrozenCallStack $ fromNote note "initNote []" $ initMay x
 
 initSafe :: [a] -> [a]
 initSafe = initDef []
@@ -137,8 +137,8 @@ headDef def = fromMaybe def . headMay
 lastDef def = fromMaybe def . lastMay
 
 headNote, lastNote :: Partial => String -> [a] -> a
-headNote note = fromNote note "headNote []" . headMay
-lastNote note = fromNote note "lastNote []" . lastMay
+headNote note x = withFrozenCallStack $ fromNote note "headNote []" $ headMay x
+lastNote note x = withFrozenCallStack $ fromNote note "lastNote []" $ lastMay x
 
 minimumMay, maximumMay :: Ord a => [a] -> Maybe a
 minimumMay = liftMay null minimum
@@ -149,8 +149,8 @@ minimumDef def = fromMaybe def . minimumMay
 maximumDef def = fromMaybe def . maximumMay
 
 minimumNote, maximumNote :: (Partial, Ord a) => String -> [a] -> a
-minimumNote note = fromNote note "minumumNote []" . minimumMay
-maximumNote note = fromNote note "maximumNote []" . maximumMay
+minimumNote note x = withFrozenCallStack $ fromNote note "minumumNote []" $ minimumMay x
+maximumNote note x = withFrozenCallStack $ fromNote note "maximumNote []" $ maximumMay x
 
 minimumByMay, maximumByMay :: (a -> a -> Ordering) -> [a] -> Maybe a
 minimumByMay = liftMay null . minimumBy
@@ -161,8 +161,8 @@ minimumByDef def = fromMaybe def .^ minimumByMay
 maximumByDef def = fromMaybe def .^ maximumByMay
 
 minimumByNote, maximumByNote :: Partial => String -> (a -> a -> Ordering) -> [a] -> a
-minimumByNote note = fromNote note "minumumByNote []" .^ minimumByMay
-maximumByNote note = fromNote note "maximumByNote []" .^ maximumByMay
+minimumByNote note f x = withFrozenCallStack $ fromNote note "minumumByNote []" $ minimumByMay f x
+maximumByNote note f x = withFrozenCallStack $ fromNote note "maximumByNote []" $ maximumByMay f x
 
 
 foldr1May, foldl1May, foldl1May' :: (a -> a -> a) -> [a] -> Maybe a
@@ -176,9 +176,9 @@ foldl1Def def = fromMaybe def .^ foldl1May
 foldl1Def' def = fromMaybe def .^ foldl1May'
 
 foldr1Note, foldl1Note, foldl1Note' :: Partial => String -> (a -> a -> a) -> [a] -> a
-foldr1Note note = fromNote note "foldr1Note []" .^ foldr1May
-foldl1Note note = fromNote note "foldl1Note []" .^ foldl1May
-foldl1Note' note = fromNote note "foldl1Note []" .^ foldl1May'
+foldr1Note note f x = withFrozenCallStack $ fromNote note "foldr1Note []" $ foldr1May f x
+foldl1Note note f x = withFrozenCallStack $ fromNote note "foldl1Note []" $ foldl1May f x
+foldl1Note' note f x = withFrozenCallStack $ fromNote note "foldl1Note []" $ foldl1May' f x
 
 scanr1May, scanl1May :: (a -> a -> a) -> [a] -> Maybe [a]
 scanr1May = liftMay null . scanr1
@@ -189,8 +189,8 @@ scanr1Def def = fromMaybe def .^ scanr1May
 scanl1Def def = fromMaybe def .^ scanl1May
 
 scanr1Note, scanl1Note :: Partial => String -> (a -> a -> a) -> [a] -> [a]
-scanr1Note note = fromNote note "scanr1Note []" .^ scanr1May
-scanl1Note note = fromNote note "scanl1Note []" .^ scanl1May
+scanr1Note note f x = withFrozenCallStack $ fromNote note "scanr1Note []" $ scanr1May f x
+scanl1Note note f x = withFrozenCallStack $ fromNote note "scanl1Note []" $ scanl1May f x
 
 cycleMay :: [a] -> Maybe [a]
 cycleMay = liftMay null cycle
@@ -199,7 +199,7 @@ cycleDef :: [a] -> [a] -> [a]
 cycleDef def = fromMaybe def . cycleMay
 
 cycleNote :: Partial => String -> [a] -> [a]
-cycleNote note = fromNote note "cycleNote []" . cycleMay
+cycleNote note x = withFrozenCallStack $ fromNote note "cycleNote []" $ cycleMay x
 
 -- | An alternative name for 'fromMaybe', to fit the naming scheme of this package.
 --   Generally using 'fromMaybe' directly would be considered better style.
@@ -207,11 +207,11 @@ fromJustDef :: a -> Maybe a -> a
 fromJustDef  = fromMaybe
 
 fromJustNote :: Partial => String -> Maybe a -> a
-fromJustNote note = fromNote note "fromJustNote Nothing"
+fromJustNote note x = withFrozenCallStack $ fromNote note "fromJustNote Nothing" x
 
 assertNote :: Partial => String -> Bool -> a -> a
 assertNote note True val = val
-assertNote note False val = fromNote note "assertNote False" Nothing
+assertNote note False val = withFrozenCallStack $ fromNote note "assertNote False" Nothing
 
 
 -- | Synonym for '!!', but includes more information in the error message.
@@ -225,7 +225,7 @@ atDef :: a -> [a] -> Int -> a
 atDef def = fromMaybe def .^ atMay
 
 atNote :: Partial => String -> [a] -> Int -> a
-atNote note = fromNoteEither note "atNote" .^ at_
+atNote note f x = withFrozenCallStack $ fromNoteEither note "atNote" $ at_ f x
 
 -- | This function provides a more precise error message than 'readEither' from 'base'.
 readEitherSafe :: Read a => String -> Either String a
@@ -246,18 +246,18 @@ readDef def = fromMaybe def . readMay
 
 -- | 'readNote' uses 'readEitherSafe' for the error message.
 readNote :: (Partial, Read a) => String -> String -> a
-readNote note = fromNoteEither note "readNote" . readEitherSafe
+readNote note x = withFrozenCallStack $ fromNoteEither note "readNote" $ readEitherSafe x
 
 -- |
 -- > lookupJust key = fromJust . lookup key
 lookupJust :: (Eq a, Partial) => a -> [(a,b)] -> b
-lookupJust = fromNote "" "lookupJust, no matching value" .^ lookup
+lookupJust x xs = withFrozenCallStack $ fromNote "" "lookupJust, no matching value" $ lookup x xs
 
 lookupJustDef :: Eq a => b -> a -> [(a,b)] -> b
 lookupJustDef def = fromMaybe def .^ lookup
 
 lookupJustNote :: (Partial, Eq a) => String -> a -> [(a,b)] -> b
-lookupJustNote note = fromNote note "lookupJustNote, no matching value" .^ lookup
+lookupJustNote note x xs = withFrozenCallStack $ fromNote note "lookupJustNote, no matching value" $ lookup x xs
 
 -- |
 -- > findJust op = fromJust . find op
@@ -268,29 +268,29 @@ findJustDef :: a -> (a -> Bool) -> [a] -> a
 findJustDef def = fromMaybe def .^ find
 
 findJustNote :: Partial => String -> (a -> Bool) -> [a] -> a
-findJustNote note = fromNote note "findJustNote, no matching value" .^ find
+findJustNote note f x = withFrozenCallStack $ fromNote note "findJustNote, no matching value" $ find f x
 
 -- |
 -- > elemIndexJust op = fromJust . elemIndex op
 elemIndexJust :: (Partial, Eq a) => a -> [a] -> Int
-elemIndexJust = fromNote "" "elemIndexJust, no matching value" .^ elemIndex
+elemIndexJust x xs = withFrozenCallStack $ fromNote "" "elemIndexJust, no matching value" $ elemIndex x xs
 
 elemIndexJustDef :: Eq a => Int -> a -> [a] -> Int
 elemIndexJustDef def = fromMaybe def .^ elemIndex
 
 elemIndexJustNote :: (Partial, Eq a) => String -> a -> [a] -> Int
-elemIndexJustNote note = fromNote note "elemIndexJustNote, no matching value" .^ elemIndex
+elemIndexJustNote note x xs = withFrozenCallStack $ fromNote note "elemIndexJustNote, no matching value" $ elemIndex x xs
 
 -- |
 -- > findIndexJust op = fromJust . findIndex op
 findIndexJust :: (a -> Bool) -> [a] -> Int
-findIndexJust = fromNote "" "findIndexJust, no matching value" .^ findIndex
+findIndexJust f x = withFrozenCallStack $ fromNote "" "findIndexJust, no matching value" $ findIndex f x
 
 findIndexJustDef :: Int -> (a -> Bool) -> [a] -> Int
 findIndexJustDef def = fromMaybe def .^ findIndex
 
 findIndexJustNote :: Partial => String -> (a -> Bool) -> [a] -> Int
-findIndexJustNote note = fromNote note "findIndexJustNote, no matching value" .^ findIndex
+findIndexJustNote note f x = withFrozenCallStack $ fromNote note "findIndexJustNote, no matching value" $ findIndex f x
 
 -- From http://stackoverflow.com/questions/2743858/safe-and-polymorphic-toenum
 -- answer by C. A. McCann
@@ -307,7 +307,7 @@ toEnumDef :: (Enum a, Bounded a) => a -> Int -> a
 toEnumDef def = fromMaybe def . toEnumMay
 
 toEnumNote :: (Partial, Enum a, Bounded a) => String -> Int -> a
-toEnumNote note = fromNote note "toEnumNote, out of range" . toEnumMay
+toEnumNote note x = withFrozenCallStack $ fromNote note "toEnumNote, out of range" $ toEnumMay x
 
 toEnumSafe :: (Enum a, Bounded a) => Int -> a
 toEnumSafe = toEnumDef minBound
@@ -319,7 +319,7 @@ succDef :: (Enum a, Eq a, Bounded a) => a -> a -> a
 succDef def = fromMaybe def . succMay
 
 succNote :: (Partial, Enum a, Eq a, Bounded a) => String -> a -> a
-succNote note = fromNote note "succNote, out of range" . succMay
+succNote note x = withFrozenCallStack $ fromNote note "succNote, out of range" $ succMay x
 
 succSafe :: (Enum a, Eq a, Bounded a) => a -> a
 succSafe = succDef maxBound
@@ -331,7 +331,7 @@ predDef :: (Enum a, Eq a, Bounded a) => a -> a -> a
 predDef def = fromMaybe def . predMay
 
 predNote :: (Partial, Enum a, Eq a, Bounded a) => String -> a -> a
-predNote note = fromNote note "predNote, out of range" . predMay
+predNote note x = withFrozenCallStack $ fromNote note "predNote, out of range" $ predMay x
 
 predSafe :: (Enum a, Eq a, Bounded a) => a -> a
 predSafe = predDef minBound
@@ -343,4 +343,4 @@ indexDef :: Ix a => Int -> (a, a) -> a -> Int
 indexDef def b = fromMaybe def . indexMay b
 
 indexNote :: (Partial, Ix a) => String -> (a, a) -> a -> Int
-indexNote note b = fromNote note "indexNote, out of range" . indexMay b
+indexNote note x y = withFrozenCallStack $ fromNote note "indexNote, out of range" $ indexMay x y

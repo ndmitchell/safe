@@ -1,5 +1,6 @@
 Changelog for Safe
 
+    Improve the display of errors, less internal callstack
     Add a few missing Partial constraints
 0.3.16, released 2018-01-06
     #22, add Safe index

@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE ConstraintKinds  #-}
+{-# LANGUAGE TupleSections    #-}
 {- |
 Provides functions that raise errors in corner cases instead of returning \"best effort\"
 results, then provides wrappers like the "Safe" module. For example:
@@ -103,7 +104,7 @@ dropExact i xs = withFrozenCallStack $ splitAtExact_ (addNote "" "dropExact") id
 -- >   | otherwise                = error "some message"
 splitAtExact :: Partial => Int -> [a] -> ([a], [a])
 splitAtExact i xs = withFrozenCallStack $ splitAtExact_ (addNote "" "splitAtExact")
-    (\x -> ([], x)) (\a b -> first (a:) b) i xs
+    ([],) (\a b -> first (a:) b) i xs
 
 takeExactNote :: Partial => String -> Int -> [a] -> [a]
 takeExactNote note i xs = withFrozenCallStack $ splitAtExact_ (addNote note "takeExactNote") (const []) (:) i xs
@@ -125,7 +126,7 @@ dropExactDef def = fromMaybe def .^ dropExactMay
 
 splitAtExactNote :: Partial => String -> Int -> [a] -> ([a], [a])
 splitAtExactNote note i xs = withFrozenCallStack $ splitAtExact_ (addNote note "splitAtExactNote")
-    (\x -> ([], x)) (\a b -> first (a:) b) i xs
+    ([],) (\a b -> first (a:) b) i xs
 
 splitAtExactMay :: Int -> [a] -> Maybe ([a], [a])
 splitAtExactMay = splitAtExact_ (const Nothing)

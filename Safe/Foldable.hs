@@ -1,5 +1,4 @@
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE CPP              #-}
 {-# LANGUAGE ConstraintKinds  #-}
 {- |
 'Foldable' functions, with wrappers like the "Safe" module.
@@ -33,19 +32,13 @@ import Safe.Partial
 fromNote :: Partial => String -> String -> Maybe a -> a
 fromNote = fromNoteModule "Safe.Foldable"
 
-isNull :: Foldable t => t a -> Bool
-#if __GLASGOW_HASKELL__ < 710
-isNull = null . toList
-#else
-isNull = F.null
-#endif
 
 ---------------------------------------------------------------------
 -- WRAPPERS
 
 foldl1May, foldr1May :: Foldable t => (a -> a -> a) -> t a -> Maybe a
-foldl1May = liftMay isNull . F.foldl1
-foldr1May = liftMay isNull . F.foldr1
+foldl1May = liftMay F.null . F.foldl1
+foldr1May = liftMay F.null . F.foldr1
 
 foldl1Note, foldr1Note :: (Partial, Foldable t) => String -> (a -> a -> a) -> t a -> a
 foldl1Note note f x = withFrozenCallStack $ fromNote note "foldl1Note on empty" $ foldl1May f x
@@ -56,8 +49,8 @@ foldl1Def def = fromMaybe def .^ foldl1May
 foldr1Def def = fromMaybe def .^ foldr1May
 
 minimumMay, maximumMay :: (Foldable t, Ord a) => t a -> Maybe a
-minimumMay = liftMay isNull F.minimum
-maximumMay = liftMay isNull F.maximum
+minimumMay = liftMay F.null F.minimum
+maximumMay = liftMay F.null F.maximum
 
 minimumDef, maximumDef :: (Foldable t, Ord a) => a -> t a -> a
 minimumDef def = fromMaybe def . minimumMay
@@ -68,8 +61,8 @@ minimumNote note x = withFrozenCallStack $ fromNote note "minimumNote on empty" 
 maximumNote note x = withFrozenCallStack $ fromNote note "maximumNote on empty" $ maximumMay x
 
 minimumByMay, maximumByMay :: Foldable t => (a -> a -> Ordering) -> t a -> Maybe a
-minimumByMay = liftMay isNull . F.minimumBy
-maximumByMay = liftMay isNull . F.maximumBy
+minimumByMay = liftMay F.null . F.minimumBy
+maximumByMay = liftMay F.null . F.maximumBy
 
 minimumByDef, maximumByDef :: Foldable t => a -> (a -> a -> Ordering) -> t a -> a
 minimumByDef def = fromMaybe def .^ minimumByMay

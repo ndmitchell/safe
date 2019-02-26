@@ -1,5 +1,6 @@
 Changelog for Safe
 
+    Stop supporting GHC 7.4 to 7.8
 0.3.17, released 2018-03-09
     Improve the display of errors, less internal callstack
     Add a few missing Partial constraints

@@ -48,10 +48,6 @@ foldl1Note, foldr1Note :: (Partial, Foldable t) => String -> (a -> a -> a) -> t 
 foldl1Note note f x = withFrozenCallStack $ fromNote note "foldl1Note on empty" $ foldl1May f x
 foldr1Note note f x = withFrozenCallStack $ fromNote note "foldr1Note on empty" $ foldr1May f x
 
-foldl1Def, foldr1Def :: Foldable t => a -> (a -> a -> a) -> t a -> a
-foldl1Def def = fromMaybe def .^ foldl1May
-foldr1Def def = fromMaybe def .^ foldr1May
-
 minimumMay, maximumMay :: (Foldable t, Ord a) => t a -> Maybe a
 minimumMay = liftMay F.null F.minimum
 maximumMay = liftMay F.null F.maximum
@@ -136,3 +132,9 @@ maximumDef def = fromMaybe def . maximumMay
 minimumByDef, maximumByDef :: Foldable t => a -> (a -> a -> Ordering) -> t a -> a
 minimumByDef def = fromMaybe def .^ minimumByMay
 maximumByDef def = fromMaybe def .^ maximumByMay
+
+{-# DEPRECATED foldr1Def "Use @foldr1May@ instead." #-}
+{-# DEPRECATED foldl1Def "Use @foldl1May@ instead." #-}
+foldl1Def, foldr1Def :: Foldable t => a -> (a -> a -> a) -> t a -> a
+foldl1Def def = fromMaybe def .^ foldl1May
+foldr1Def def = fromMaybe def .^ foldr1May

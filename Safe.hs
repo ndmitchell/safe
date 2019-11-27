@@ -196,11 +196,6 @@ foldr1May = liftMay null . foldr1
 foldl1May = liftMay null . foldl1
 foldl1May' = liftMay null . foldl1'
 
-foldr1Def, foldl1Def, foldl1Def' :: a -> (a -> a -> a) -> [a] -> a
-foldr1Def def = fromMaybe def .^ foldr1May
-foldl1Def def = fromMaybe def .^ foldl1May
-foldl1Def' def = fromMaybe def .^ foldl1May'
-
 foldr1Note, foldl1Note, foldl1Note' :: Partial => String -> (a -> a -> a) -> [a] -> a
 foldr1Note note f x = withFrozenCallStack $ fromNote note "foldr1Note []" $ foldr1May f x
 foldl1Note note f x = withFrozenCallStack $ fromNote note "foldl1Note []" $ foldl1May f x
@@ -385,3 +380,11 @@ maximumDef def = fromMaybe def . maximumMay
 minimumByDef, maximumByDef :: a -> (a -> a -> Ordering) -> [a] -> a
 minimumByDef def = fromMaybe def .^ minimumByMay
 maximumByDef def = fromMaybe def .^ maximumByMay
+
+{-# DEPRECATED foldr1Def "Use @foldr1May@ instead." #-}
+{-# DEPRECATED foldl1Def "Use @foldl1May@ instead." #-}
+{-# DEPRECATED foldl1Def' "Use @foldl1May'@ instead." #-}
+foldr1Def, foldl1Def, foldl1Def' :: a -> (a -> a -> a) -> [a] -> a
+foldr1Def def = fromMaybe def .^ foldr1May
+foldl1Def def = fromMaybe def .^ foldl1May
+foldl1Def' def = fromMaybe def .^ foldl1May'

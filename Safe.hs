@@ -28,10 +28,13 @@ module Safe(
     initMay, initDef, initNote, initSafe,
     headMay, headDef, headNote,
     lastMay, lastDef, lastNote,
-    minimumMay, minimumDef, minimumNote,
-    maximumMay, maximumDef, maximumNote,
-    minimumByMay, minimumByDef, minimumByNote,
-    maximumByMay, maximumByDef, maximumByNote,
+    minimumMay, minimumNote,
+    maximumMay, maximumNote,
+    minimumByMay, minimumByNote,
+    maximumByMay, maximumByNote,
+    minimumBoundBy, maximumBoundBy,
+    maximumBounded, maximumBound,
+    minimumBounded, minimumBound,
     foldr1May, foldr1Def, foldr1Note,
     foldl1May, foldl1Def, foldl1Note,
     foldl1May', foldl1Def', foldl1Note',
@@ -50,6 +53,8 @@ module Safe(
     succMay, succDef, succNote, succSafe,
     predMay, predDef, predNote, predSafe,
     indexMay, indexDef, indexNote,
+    -- * Deprecated
+    minimumDef, maximumDef, minimumByDef, maximumByDef
     ) where
 
 import Safe.Util
@@ -144,10 +149,6 @@ minimumMay, maximumMay :: Ord a => [a] -> Maybe a
 minimumMay = liftMay null minimum
 maximumMay = liftMay null maximum
 
-minimumDef, maximumDef :: Ord a => a -> [a] -> a
-minimumDef def = fromMaybe def . minimumMay
-maximumDef def = fromMaybe def . maximumMay
-
 minimumNote, maximumNote :: (Partial, Ord a) => String -> [a] -> a
 minimumNote note x = withFrozenCallStack $ fromNote note "minumumNote []" $ minimumMay x
 maximumNote note x = withFrozenCallStack $ fromNote note "maximumNote []" $ maximumMay x
@@ -156,14 +157,39 @@ minimumByMay, maximumByMay :: (a -> a -> Ordering) -> [a] -> Maybe a
 minimumByMay = liftMay null . minimumBy
 maximumByMay = liftMay null . maximumBy
 
-minimumByDef, maximumByDef :: a -> (a -> a -> Ordering) -> [a] -> a
-minimumByDef def = fromMaybe def .^ minimumByMay
-maximumByDef def = fromMaybe def .^ maximumByMay
-
 minimumByNote, maximumByNote :: Partial => String -> (a -> a -> Ordering) -> [a] -> a
 minimumByNote note f x = withFrozenCallStack $ fromNote note "minumumByNote []" $ minimumByMay f x
 maximumByNote note f x = withFrozenCallStack $ fromNote note "maximumByNote []" $ maximumByMay f x
 
+-- | The largest element of a list with respect to the
+-- given comparison function. The result is bounded by the value given as the first argument.
+maximumBoundBy :: a -> (a -> a -> Ordering) -> [a] -> a
+maximumBoundBy x f xs = maximumBy f $ x : xs
+
+-- | The smallest element of a list with respect to the
+-- given comparison function. The result is bounded by the value given as the first argument.
+minimumBoundBy :: a -> (a -> a -> Ordering) -> [a] -> a
+minimumBoundBy x f xs = minimumBy f $ x : xs
+
+-- | The largest element of a list.
+-- The result is bounded by the value given as the first argument.
+maximumBound :: Ord a => a -> [a] -> a
+maximumBound x xs = maximum $ x : xs
+
+-- | The smallest element of a list.
+-- The result is bounded by the value given as the first argument.
+minimumBound :: Ord a => a -> [a] -> a
+minimumBound x xs = minimum $ x : xs
+
+-- | The largest element of a list.
+-- The result is bounded by 'minBound'.
+maximumBounded :: (Ord a, Bounded a) => [a] -> a
+maximumBounded = maximumBound minBound
+
+-- | The largest element of a list.
+-- The result is bounded by 'maxBound'.
+minimumBounded :: (Ord a, Bounded a) => [a] -> a
+minimumBounded = minimumBound maxBound
 
 foldr1May, foldl1May, foldl1May' :: (a -> a -> a) -> [a] -> Maybe a
 foldr1May = liftMay null . foldr1
@@ -344,3 +370,18 @@ indexDef def b = fromMaybe def . indexMay b
 
 indexNote :: (Partial, Ix a) => String -> (a, a) -> a -> Int
 indexNote note x y = withFrozenCallStack $ fromNote note "indexNote, out of range" $ indexMay x y
+
+---------------------------------------------------------------------
+-- DEPRECATED
+
+{-# DEPRECATED minimumDef "Use @minimumBound@ instead." #-}
+{-# DEPRECATED maximumDef "Use @maximumBound@ instead." #-}
+minimumDef, maximumDef :: Ord a => a -> [a] -> a
+minimumDef def = fromMaybe def . minimumMay
+maximumDef def = fromMaybe def . maximumMay
+
+{-# DEPRECATED minimumByDef "Use @minimumBoundBy@ instead." #-}
+{-# DEPRECATED maximumByDef "Use @maximumBoundBy@ instead." #-}
+minimumByDef, maximumByDef :: a -> (a -> a -> Ordering) -> [a] -> a
+minimumByDef def = fromMaybe def .^ minimumByMay
+maximumByDef def = fromMaybe def .^ maximumByMay

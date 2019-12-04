@@ -1,5 +1,7 @@
 Changelog for Safe
 
+    #27, deprecate maximumDef and friends, fold*1Def
+    #27, add maximumBounded and friends
     Stop supporting GHC 7.4 to 7.8
 0.3.17, released 2018-03-09
     Improve the display of errors, less internal callstack

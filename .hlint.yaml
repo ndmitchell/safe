@@ -11,6 +11,7 @@
 - ignore: {name: "Use <$>"}
 - ignore: {name: "Unused LANGUAGE pragma"}
 - ignore: {name: "Use module export list"}
+- ignore: {name: "Use pure"}
 
 
 # Specify additional command line arguments

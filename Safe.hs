@@ -53,7 +53,7 @@ module Safe(
     succMay, succDef, succNote, succSafe,
     predMay, predDef, predNote, predSafe,
     indexMay, indexDef, indexNote,
-    -- * Deprecated
+    -- * Discouraged
     minimumDef, maximumDef, minimumByDef, maximumByDef
     ) where
 
@@ -366,20 +366,23 @@ indexDef def b = fromMaybe def . indexMay b
 indexNote :: (Partial, Ix a) => String -> (a, a) -> a -> Int
 indexNote note x y = withFrozenCallStack $ fromNote note "indexNote, out of range" $ indexMay x y
 
----------------------------------------------------------------------
--- DEPRECATED
 
-{-# DEPRECATED minimumDef "Use @minimumBound@ instead." #-}
-{-# DEPRECATED maximumDef "Use @maximumBound@ instead." #-}
+---------------------------------------------------------------------
+-- DISCOURAGED
+
+-- | New users are recommended to use 'minimumBound' or 'maximumBound' instead.
 minimumDef, maximumDef :: Ord a => a -> [a] -> a
 minimumDef def = fromMaybe def . minimumMay
 maximumDef def = fromMaybe def . maximumMay
 
-{-# DEPRECATED minimumByDef "Use @minimumBoundBy@ instead." #-}
-{-# DEPRECATED maximumByDef "Use @maximumBoundBy@ instead." #-}
+-- | New users are recommended to use 'minimumBoundBy' or 'maximumBoundBy' instead.
 minimumByDef, maximumByDef :: a -> (a -> a -> Ordering) -> [a] -> a
 minimumByDef def = fromMaybe def .^ minimumByMay
 maximumByDef def = fromMaybe def .^ maximumByMay
+
+
+---------------------------------------------------------------------
+-- DEPRECATED
 
 {-# DEPRECATED foldr1Def "Use @foldr1May@ instead." #-}
 {-# DEPRECATED foldl1Def "Use @foldl1May@ instead." #-}

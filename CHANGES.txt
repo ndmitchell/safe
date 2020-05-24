@@ -1,5 +1,6 @@
 Changelog for Safe
 
+    #30, undeprecate maximumDef and friends, fold*1Def
 0.3.18, released 2019-12-04
     #27, deprecate maximumDef and friends, fold*1Def
     #27, add maximumBounded and friends

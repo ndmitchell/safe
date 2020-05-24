@@ -17,9 +17,10 @@ module Safe.Foldable(
     maximumBoundBy, minimumBoundBy,
     maximumBounded, maximumBound,
     minimumBounded, minimumBound,
+    -- * Discouraged
+    minimumDef, maximumDef, minimumByDef, maximumByDef,
     -- * Deprecated
     foldl1Safe, foldr1Safe, findJustSafe,
-    minimumDef, maximumDef, minimumByDef, maximumByDef
     ) where
 
 import Safe.Util
@@ -107,6 +108,25 @@ findJustNote note f x = withFrozenCallStack $ fromNote note "findJustNote, no ma
 
 
 ---------------------------------------------------------------------
+-- DISCOURAGED
+
+-- | New users are recommended to use 'minimumBound' or 'maximumBound' instead.
+minimumDef, maximumDef :: (Foldable t, Ord a) => a -> t a -> a
+minimumDef def = fromMaybe def . minimumMay
+maximumDef def = fromMaybe def . maximumMay
+
+-- | New users are recommended to use 'minimumBoundBy' or 'maximumBoundBy' instead.
+minimumByDef, maximumByDef :: Foldable t => a -> (a -> a -> Ordering) -> t a -> a
+minimumByDef def = fromMaybe def .^ minimumByMay
+maximumByDef def = fromMaybe def .^ maximumByMay
+
+-- | New users are recommended to use 'foldr1May' or 'foldl1May' instead.
+foldl1Def, foldr1Def :: Foldable t => a -> (a -> a -> a) -> t a -> a
+foldl1Def def = fromMaybe def .^ foldl1May
+foldr1Def def = fromMaybe def .^ foldr1May
+
+
+---------------------------------------------------------------------
 -- DEPRECATED
 
 {-# DEPRECATED foldl1Safe "Use @foldl f mempty@ instead." #-}
@@ -120,21 +140,3 @@ foldr1Safe fun = F.foldr fun mempty
 {-# DEPRECATED findJustSafe "Use @findJustDef mempty@ instead." #-}
 findJustSafe :: (Monoid m, Foldable t) => (m -> Bool) -> t m -> m
 findJustSafe = findJustDef mempty
-
-{-# DEPRECATED minimumDef "Use @minimumBound@ instead." #-}
-{-# DEPRECATED maximumDef "Use @maximumBound@ instead." #-}
-minimumDef, maximumDef :: (Foldable t, Ord a) => a -> t a -> a
-minimumDef def = fromMaybe def . minimumMay
-maximumDef def = fromMaybe def . maximumMay
-
-{-# DEPRECATED minimumByDef "Use @minimumBoundBy@ instead." #-}
-{-# DEPRECATED maximumByDef "Use @maximumBoundBy@ instead." #-}
-minimumByDef, maximumByDef :: Foldable t => a -> (a -> a -> Ordering) -> t a -> a
-minimumByDef def = fromMaybe def .^ minimumByMay
-maximumByDef def = fromMaybe def .^ maximumByMay
-
-{-# DEPRECATED foldr1Def "Use @foldr1May@ instead." #-}
-{-# DEPRECATED foldl1Def "Use @foldl1May@ instead." #-}
-foldl1Def, foldr1Def :: Foldable t => a -> (a -> a -> a) -> t a -> a
-foldl1Def def = fromMaybe def .^ foldl1May
-foldr1Def def = fromMaybe def .^ foldr1May

@@ -96,7 +96,7 @@ takeExact i xs = withFrozenCallStack $ splitAtExact_ (addNote "" "takeExact") (c
 -- >   | n >= 0 && n <= length xs = drop n xs
 -- >   | otherwise                = error "some message"
 dropExact :: Partial => Int -> [a] -> [a]
-dropExact i xs = withFrozenCallStack $ splitAtExact_ (addNote "" "dropExact") id (flip const) i xs
+dropExact i xs = withFrozenCallStack $ splitAtExact_ (addNote "" "dropExact") id (\_ x -> x) i xs
 
 -- |
 -- > splitAtExact n xs =
@@ -116,10 +116,10 @@ takeExactDef :: [a] -> Int -> [a] -> [a]
 takeExactDef def = fromMaybe def .^ takeExactMay
 
 dropExactNote :: Partial => String -> Int -> [a] -> [a]
-dropExactNote note i xs = withFrozenCallStack $ splitAtExact_ (addNote note "dropExactNote") id (flip const) i xs
+dropExactNote note i xs = withFrozenCallStack $ splitAtExact_ (addNote note "dropExactNote") id (\_ x -> x) i xs
 
 dropExactMay :: Int -> [a] -> Maybe [a]
-dropExactMay = splitAtExact_ (const Nothing) Just (flip const)
+dropExactMay = splitAtExact_ (const Nothing) Just (\_ x -> x)
 
 dropExactDef :: [a] -> Int -> [a] -> [a]
 dropExactDef def = fromMaybe def .^ dropExactMay

@@ -11,7 +11,7 @@ copyright:      Neil Mitchell 2007-2021
 homepage:       https://github.com/ndmitchell/safe#readme
 synopsis:       Library of safe (exception free) functions
 bug-reports:    https://github.com/ndmitchell/safe/issues
-tested-with:    GHC==8.10, GHC==8.8, GHC==8.6, GHC==8.4, GHC==8.2, GHC==8.0
+tested-with:    GHC==9.0, GHC==8.10, GHC==8.8, GHC==8.6, GHC==8.4, GHC==8.2, GHC==8.0
 description:
     A library wrapping @Prelude@/@Data.List@ functions that can throw exceptions, such as @head@ and @!!@.
     Each unsafe function has up to four variants, e.g. with @tail@:

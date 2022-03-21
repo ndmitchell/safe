@@ -1,5 +1,5 @@
-:set -fno-warn-overlapping-patterns
-:set -fwarn-unused-binds -fwarn-unused-imports -fwarn-orphans
+:set -Wno-overlapping-patterns
+:set -Wunused-binds -Wunused-imports -Worphans
 :load Test
 
 :def docs_ const $ return $ unlines [":!cabal haddock"]

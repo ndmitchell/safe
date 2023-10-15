@@ -1,4 +1,4 @@
-# Safe [![Hackage version](https://img.shields.io/hackage/v/safe.svg?label=Hackage)](https://hackage.haskell.org/package/safe) [![Stackage version](https://www.stackage.org/package/safe/badge/nightly?label=Stackage)](https://www.stackage.org/package/safe) [![Build status](https://img.shields.io/github/workflow/status/ndmitchell/safe/ci/master.svg)](https://github.com/ndmitchell/safe/actions)
+# Safe [![Hackage version](https://img.shields.io/hackage/v/safe.svg?label=Hackage)](https://hackage.haskell.org/package/safe) [![Stackage version](https://www.stackage.org/package/safe/badge/nightly?label=Stackage)](https://www.stackage.org/package/safe) [![Build status](https://img.shields.io/github/actions/workflow/status/ndmitchell/safe/ci.yml?branch=master)](https://github.com/ndmitchell/safe/actions)
 
 A library wrapping `Prelude`/`Data.List` functions that can throw exceptions, such as `head` and `!!`. Each unsafe function has up to four variants, e.g. with `tail`:
 

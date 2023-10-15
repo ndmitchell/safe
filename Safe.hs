@@ -98,7 +98,8 @@ at_ xs o | o < 0 = Left $ "index must not be negative, index=" ++ show o
 -- > tailMay [] = Nothing
 -- > tailMay [1,3,4] = Just [3,4]
 tailMay :: [a] -> Maybe [a]
-tailMay = liftMay null tail
+tailMay [] = Nothing
+tailMay (_:xs) = Just xs
 
 -- |
 -- > tailDef [12] [] = [12]
@@ -134,7 +135,7 @@ initSafe = initDef []
 
 
 headMay, lastMay :: [a] -> Maybe a
-headMay = liftMay null head
+headMay = listToMaybe
 lastMay = liftMay null last
 
 headDef, lastDef :: a -> [a] -> a

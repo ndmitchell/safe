@@ -1,5 +1,6 @@
 Changelog for Safe
 
+    #34, add headErr, tailErr
     #33, avoid using head/tail to avoid x-partial
 0.3.19, released 2020-05-24
     #30, undeprecate maximumDef and friends, fold*1Def

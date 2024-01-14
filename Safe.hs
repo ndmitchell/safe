@@ -1,10 +1,15 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE ConstraintKinds  #-}
+
+{-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
+
 {- |
 A module wrapping @Prelude@/@Data.List@ functions that can throw exceptions, such as @head@ and @!!@.
-Each unsafe function has up to four variants, e.g. with @tail@:
+Each unsafe function has up to five variants, e.g. with @tail@:
 
-* @'tail' :: [a] -> [a]@, raises an error on @tail []@.
+* @'tail' :: [a] -> [a]@, raises an error on @tail []@, as provided by 'Prelude'.
+
+* @'tailErr' :: [a] -> [a]@, alias for @tail@ that doesn't trigger an @x-partial@ warning and does raise errors.
 
 * @'tailMay' :: [a] -> /Maybe/ [a]@, turns errors into @Nothing@.
 
@@ -23,6 +28,8 @@ This module also introduces some new functions, documented at the top of the mod
 module Safe(
     -- * New functions
     abort, at, lookupJust, findJust, elemIndexJust, findIndexJust,
+    -- * Partial functions
+    tailErr, headErr,
     -- * Safe wrappers
     tailMay, tailDef, tailNote, tailSafe,
     initMay, initDef, initNote, initSafe,
@@ -93,6 +100,22 @@ at_ xs o | o < 0 = Left $ "index must not be negative, index=" ++ show o
 
 ---------------------------------------------------------------------
 -- WRAPPERS
+
+-- | Identical to 'tail', namely that fails on an empty list.
+--   Useful to avoid the @x-partial@ warning introduced in GHC 9.8.
+--
+-- > tailErr [] = error "Prelude.tail: empty list"
+-- > tailErr [1,2,3] = [2,3]
+tailErr :: [a] -> [a]
+tailErr = tail
+
+-- | Identical to 'head', namely that fails on an empty list.
+--   Useful to avoid the @x-partial@ warning introduced in GHC 9.8.
+--
+-- > headErr [] = error "Prelude.head: empty list"
+-- > headErr [1,2,3] = 1
+headErr :: [a] -> a
+headErr = head
 
 -- |
 -- > tailMay [] = Nothing

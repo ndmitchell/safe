@@ -106,16 +106,16 @@ at_ xs o | o < 0 = Left $ "index must not be negative, index=" ++ show o
 --
 -- > tailErr [] = error "Prelude.tail: empty list"
 -- > tailErr [1,2,3] = [2,3]
-tailErr :: [a] -> [a]
-tailErr = tail
+tailErr :: Partial => [a] -> [a]
+tailErr x = tail x
 
 -- | Identical to 'head', namely that fails on an empty list.
 --   Useful to avoid the @x-partial@ warning introduced in GHC 9.8.
 --
 -- > headErr [] = error "Prelude.head: empty list"
 -- > headErr [1,2,3] = 1
-headErr :: [a] -> a
-headErr = head
+headErr :: Partial => [a] -> a
+headErr x = head x
 
 -- |
 -- > tailMay [] = Nothing

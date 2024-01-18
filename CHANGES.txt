@@ -1,5 +1,6 @@
 Changelog for Safe
 
+0.3.21, released 2024-01-18
     #34, mark headErr/tailErr as Partial
 0.3.20, released 2024-01-14
     #34, add headErr, tailErr
